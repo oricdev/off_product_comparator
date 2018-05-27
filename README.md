@@ -11,13 +11,15 @@ After a few seconds, the server returns a list of similar products to yours (sho
 and nutrition score.
 
 <img src="https://github.com/oricdev/off_product_comparator/blob/master/documentation/images/scr_search_results.png"
-title="search results" />
+title="search results"
+height="350px" />
 
 A box with thin borders surrounds a subset as suggestions. Suggested products are shown along with their image in a ribbon below the graph. You can browse horizontally (with the finger on smartphones) to fetch a product, or using the left and right arrows below the ribbon. Tap on a product to select it: a red spot will highlight in the graph and its product code is filled in the appropriate search field.
 Click on the magnifying glass to see some description of the product.
 
 <img src="https://github.com/oricdev/off_product_comparator/blob/master/documentation/images/scr_details_suggested_product.png"
-title="details of a similar product chosen in the ribbon" />
+title="details of a similar product chosen in the ribbon"
+height="350px" />
 
 **KNOWN RESTRICTIONS**
 This project is in early stage and has currently some restrictions which need to be cleared off in later stages:
