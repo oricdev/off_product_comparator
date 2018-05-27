@@ -21,14 +21,36 @@ Click on the magnifying glass to see some description of the product.
 title="details of a similar product chosen in the ribbon"
 height="350px" />
 
-**KNOWN RESTRICTIONS**
+<h2>KNOWN RESTRICTIONS</h2>
 This project is in early stage and has currently some restrictions which need to be cleared off in later stages:
-- 1 user request at a time
-- optimization of matching searches
+<il>
+<ul>1 user request at a time</ul>
+<ul>optimization of matching searches</ul>
+</il>
 
-**How to install**
-First, update in module/Querier/__init__.py::connect() the 2 following lines with the connection data to your OpenFoodFacts MongoDb:
+<h2>How to install</h2>
+<h3>Configuring your WSGI site</h3>
+Set your application path so that it points to <quote>/off_product_comparator/wsgi.py</quote>
 
+<h3>Installing the OpenFoodFacts Mongo-database</h3>
+Refer to <a href='https://fr.openfoodfacts.org/data'>OpenFoodFacts Data</a>, section <b>Dump MongoDB</b>.
+<h3>Updating your Mongo-Db connection details</h3>
+<p>Connection details are presently hard-coded in the application.</p>
+<p>Simply update in <i>module/Querier/`__init__`.py::connect()</i> the 2 following lines with the connection data to your OpenFoodFacts MongoDb:
+</p>
+<p>
+<quote>
 self.pongo = MongoClient("mongodb://<user>:<password>@<mongodb_url>/<mongodb_path>")
 self.db = self.pongo["<mongodb_path>"]
+</quote>
+</p>
+<h3>Running the application</h3>
+<p>Deploy the whole thing on your Python environment and start the instance.</p>
+<p>The instance will use the entry point <quote>wsgi.py</quote> and listen to incoming requests (REST) defined in <quote>app.py</quote>.</p>
+<p>On the client side, open a browser and enter the http-address of your server, for instance:
+<quote>https://tuttifrutti.alwaysdata.net</quote></p>
+
+<p>The server delivers the <quote>templates/index.html</quote> file based on resources' template defined in <quote>templates/layout.html</quote>.
+That is it.
+
 
