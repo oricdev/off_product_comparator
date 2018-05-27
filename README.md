@@ -23,14 +23,14 @@ height="350px" />
 
 <h2>KNOWN RESTRICTIONS</h2>
 This project is in early stage and has currently some restrictions which need to be cleared off in later stages:
-<il>
-<ul>1 user request at a time</ul>
-<ul>optimization of matching searches</ul>
-</il>
+<ul>
+<li>1 user request at a time</li>
+<li>optimization of matching searches</li>
+</ul>
 
 <h2>How to install</h2>
 <h3>Configuring your WSGI site</h3>
-Set your application path so that it points to <quote>/off_product_comparator/wsgi.py</quote>
+Set your application path so that it points to <blockquote>/off_product_comparator/wsgi.py</blockquote>
 
 <h3>Installing the OpenFoodFacts Mongo-database</h3>
 Refer to <a href='https://fr.openfoodfacts.org/data'>OpenFoodFacts Data</a>, section <b>Dump MongoDB</b>.
@@ -39,18 +39,18 @@ Refer to <a href='https://fr.openfoodfacts.org/data'>OpenFoodFacts Data</a>, sec
 <p>Simply update in <i>module/Querier/`__init__`.py::connect()</i> the 2 following lines with the connection data to your OpenFoodFacts MongoDb:
 </p>
 <p>
-<quote>
+<code>
 self.pongo = MongoClient("mongodb://<user>:<password>@<mongodb_url>/<mongodb_path>")
 self.db = self.pongo["<mongodb_path>"]
-</quote>
+</code>
 </p>
 <h3>Running the application</h3>
 <p>Deploy the whole thing on your Python environment and start the instance.</p>
-<p>The instance will use the entry point <quote>wsgi.py</quote> and listen to incoming requests (REST) defined in <quote>app.py</quote>.</p>
+<p>The instance will use the entry point <blockquote>wsgi.py</blockquote> and listen to incoming requests (REST) defined in <blockquote>app.py</blockquote>.</p>
 <p>On the client side, open a browser and enter the http-address of your server, for instance:
-<quote>https://tuttifrutti.alwaysdata.net</quote></p>
+<code>https://tuttifrutti.alwaysdata.net</code></p>
 
-<p>The server delivers the <quote>templates/index.html</quote> file based on resources' template defined in <quote>templates/layout.html</quote>.
+<p>The server delivers the <blockquote>templates/index.html</blockquote> file based on resources' template defined in <blockquote>templates/layout.html</blockquote>.
 That is it.
 
 
