@@ -40,17 +40,21 @@ Refer to <a href='https://fr.openfoodfacts.org/data'>OpenFoodFacts Data</a>, sec
 </p>
 <p>
 <code>
-self.pongo = MongoClient("mongodb://<user>:<password>@<mongodb_url>/<mongodb_path>")
-self.db = self.pongo["<mongodb_path>"]
+self.pongo = MongoClient("mongodb://&lt;user&gt;:&lt;password&gt;@&lt;mongodb_url&gt;/&lt;mongodb_path&gt;")
+<br />
+self.db = self.pongo["&lt;mongodb_path&gt;"]
 </code>
 </p>
 <h3>Running the application</h3>
 <p>Deploy the whole thing on your Python environment and start the instance.</p>
 <p>The instance will use the entry point <blockquote>wsgi.py</blockquote> and listen to incoming requests (REST) defined in <blockquote>app.py</blockquote>.</p>
 <p>On the client side, open a browser and enter the http-address of your server, for instance:
-<code>https://tuttifrutti.alwaysdata.net</code></p>
-
-<p>The server delivers the <blockquote>templates/index.html</blockquote> file based on resources' template defined in <blockquote>templates/layout.html</blockquote>.
-That is it.
+<blockquote>https://tuttifrutti.alwaysdata.net</blockquote></p>
+<p>The server will respond to the route <code>/</code> by executing the function <code>helloAjax</code> defined in <code>app.py</code>.
+<p>The server delivers the <blockquote>templates/index.html</blockquote> file based on resources' template defined in <blockquote>templates/layout.html</blockquote>
+That is it!
+</p>
+<p>Feel free to contact the author in case of questions or remarks :).
+</p>
 
 
