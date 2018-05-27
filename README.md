@@ -1,6 +1,6 @@
 <h1>OpenFoodFacts Product Comparator</h1>
 
-<p>Link for testing: <a href="https://tuttifrutti.alwaysdata.net" target="blank">tuttifrutti.alwaysdata.net</a>.</p>
+<p>Link for testing: <a href="https://tuttifrutti.alwaysdata.net" target="_blank">tuttifrutti.alwaysdata.net</a>.</p>
 <p>[see restrictions mentioned below.]<p>
 <h2>Tech used</h2>
 <p>This project uses data from the <a href="https://world.openfoodfacts.org/">OPENFOODFACTS</a> database.</p>
