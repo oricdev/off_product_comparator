@@ -1,7 +1,9 @@
 <h1>OpenFoodFacts Product Comparator</h1>
 
 <h2>Tech used</h2>
-This project is developped using Python 2.7 WSGI (backend) and html/css/ajax (frontend).It is intended to be used on any kind of devices (smartphones, tablets, desktops).
+<p>This project uses data from the <a href="https://world.openfoodfacts.org/">OPENFOODFACTS</a> database.</p>
+<p>It is developped using Python 2.7 WSGI (backend) and html/css/ajax (frontend).</p>
+<p>It is browser-based and hence intended to be used on any kind of devices (smartphones, tablets, desktops).</p>
 
 <h2>How to use?</h2>
 At startup, the country field may be automatically filled or choose it in the list.
