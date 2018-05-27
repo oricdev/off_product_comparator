@@ -1,5 +1,7 @@
 <h1>OpenFoodFacts Product Comparator</h1>
 
+<p>Link for testing: <a href="https://tuttifrutti.alwaysdata.net" target="_blank">tuttifrutti.alwaysdata.net</a>.</p>
+<p>[see restrictions mentioned below.]<p>
 <h2>Tech used</h2>
 <p>This project uses data from the <a href="https://world.openfoodfacts.org/">OPENFOODFACTS</a> database.</p>
 <p>It is developped using Python 2.7 WSGI (backend) and html/css/ajax (frontend).</p>
@@ -35,7 +37,7 @@ This project is in early stage and has currently some restrictions which need to
 Set your application path so that it points to <blockquote>/off_product_comparator/wsgi.py</blockquote>
 
 <h3>Installing the OpenFoodFacts Mongo-database</h3>
-Refer to <a href='https://fr.openfoodfacts.org/data'>OpenFoodFacts Data</a>, section <b>Dump MongoDB</b>.
+Refer to <a href='https://fr.openfoodfacts.org/data' target="_blank">OpenFoodFacts Data</a>, section <b>Dump MongoDB</b>.
 <h3>Updating your Mongo-Db connection details</h3>
 <p>Connection details are presently hard-coded in the application.</p>
 <p>Simply update in <i>module/Querier/`__init__`.py::connect()</i> the 2 following lines with the connection data to your OpenFoodFacts MongoDb:
