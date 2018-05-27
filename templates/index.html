@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OFF-Product Comparator</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head>
+
+<body bgcolor='#e8e8e8'>
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Waiting Screen -->
+<div id="screenBlock">
+    <!--<img src="{{ url_for('static',filename='images/giphy5.gif') }}" title="server busy"/>-->
+</div>
+
+<!-- Display details of selected product among those which are suggested in the bottom banner -->
+<div id="selected_product_details">
+
+</div>
+
+<!-- GRAPH HEADER -->
+
+<div id="banner"><a style="color: white;"
+                    href='https://world.openfoodfacts.org'
+                    target='_blank'>OPENFOODFACTS</a>
+    PRODUCT COMPARATOR
+</div>
+<div id="product_details"><span id="prod_ref_code">&nbsp;</span> &nbsp;&nbsp;
+    <span id="prod_ref_name"/></div>
+<div style='width: 98%; text-align: right;'>
+    <table style='text-align: right; width: 100%'>
+        <tbody>
+        <tr>
+            <td style='border-radius: 5px;'>
+                <table style="width: 100%">
+                    <tr style='text-align: right; vertical-align: top; background-color: #d0d0d0;'>
+                        <td id="cell_product_image">
+                            <img id="prod_ref_image" height="javascript: $(window).innerHeight()/7"
+                                 src='https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png'
+                                 onclick="$(ID_INPUT_PRODUCT_CODE).val(current_product==null? PRODUCT_CODE_DEFAULT : current_product.code)"
+                            />
+                            <div id="links_off">
+                                <a id="url_off_prod" href='https://world.openfoodfacts.org' target='_blank'>
+                                    <img src='https://static.openfoodfacts.org/images/favicon/apple-touch-icon-57x57.png'
+                                         id="img_off_prod"
+                                         height='28'
+                                         title='see the product details in the openfoodfacts website.'/>
+                                </a>
+                                <a id="url_off_json_prod"
+                                   href='https://fr.openfoodfacts.org/api/v0/produit/3029330003533.json'
+                                   target='_blank'>
+                                    <img id="img_off_json"
+                                         src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/JSON_vector_logo.svg/160px-JSON_vector_logo.svg.png'
+                                         height='28'
+                                         title='see json details for the product (best seen on Firefox).'/>
+                                </a></div>
+                        </td>
+                        <td>
+                            <div id="prod_ref_categories" style="display:none"></div>
+                            <div id="criteria">
+                                <table>
+                                    <tr>
+                                        <td>Country</td>
+                                        <td>
+                                            <!-- List of navigator's languages: see
+                                            https://stackoverflow.com/questions/5580876/navigator-language-list-of-all-languages
+                                            -->
+                                            <select id="input_country"
+                                                    onchange="fetch_stores($(ID_INPUT_COUNTRY+' option:selected')[0])"
+                                            >
+                                                <option selected></option>
+                                                <option>en:algeria</option>
+                                                <option>en:an</option>
+                                                <option>en:andorra</option>
+                                                <option>en:argentina</option>
+                                                <option>en:armenia</option>
+                                                <option>en:aruba</option>
+                                                <option>en:australia</option>
+                                                <option value="at">en:austria</option>
+                                                <option>en:azerbaijan</option>
+                                                <option>en:bahrain</option>
+                                                <option>en:bangladesh</option>
+                                                <option>en:belarus</option>
+                                                <option value="be">en:belgium</option>
+                                                <option>en:belize</option>
+                                                <option>en:brazil</option>
+                                                <option>en:brunei</option>
+                                                <option>en:bulgaria</option>
+                                                <option>en:burkina-faso</option>
+                                                <option>en:burundi</option>
+                                                <option>en:cambodia</option>
+                                                <option>en:canada</option>
+                                                <option>en:chile</option>
+                                                <option>en:china</option>
+                                                <option>en:colombia</option>
+                                                <option>en:cook-islands</option>
+                                                <option>en:costa-rica</option>
+                                                <option>en:cote-d-ivoire</option>
+                                                <option>en:croatia</option>
+                                                <option>en:cuba</option>
+                                                <option>en:cyprus</option>
+                                                <option>en:czech-republic</option>
+                                                <option>en:democratic-republic-of-the-congo</option>
+                                                <option>en:denmark</option>
+                                                <option>en:deutschland</option>
+                                                <option>en:dominican-republic</option>
+                                                <option>en:ecuador</option>
+                                                <option>en:egypt</option>
+                                                <option>en:el-salvador</option>
+                                                <option>en:estonia</option>
+                                                <option>en:european-union</option>
+                                                <option>en:finland</option>
+                                                <option value="fr">en:france</option>
+                                                <option>en:french-guiana</option>
+                                                <option>en:french-polynesia</option>
+                                                <option>en:gabon</option>
+                                                <option>en:georgia</option>
+                                                <option value="de">en:germany</option>
+                                                <option>en:ghana</option>
+                                                <option>en:greece</option>
+                                                <option>en:guadeloupe</option>
+                                                <option>en:guatemala</option>
+                                                <option>en:guinea</option>
+                                                <option>en:hawaii</option>
+                                                <option>en:hong-kong</option>
+                                                <option>en:hungary</option>
+                                                <option>en:iceland</option>
+                                                <option>en:india</option>
+                                                <option>en:indonesia</option>
+                                                <option>en:iran</option>
+                                                <option>en:iraq</option>
+                                                <option>en:ireland</option>
+                                                <option>en:irlande</option>
+                                                <option>en:israel</option>
+                                                <option value="it">en:italy</option>
+                                                <option>en:japan</option>
+                                                <option>en:jordan</option>
+                                                <option>en:kazakhstan</option>
+                                                <option>en:kenya</option>
+                                                <option>en:kuwait</option>
+                                                <option>en:latvia</option>
+                                                <option>en:lebanon</option>
+                                                <option>en:lithuania</option>
+                                                <option value="lu">en:luxembourg</option>
+                                                <option>en:macau</option>
+                                                <option>en:malaysia</option>
+                                                <option>en:maldives</option>
+                                                <option>en:mali</option>
+                                                <option>en:malta</option>
+                                                <option>en:martinique</option>
+                                                <option>en:mauritania</option>
+                                                <option>en:mauritius</option>
+                                                <option>en:mayotte</option>
+                                                <option>en:mexico</option>
+                                                <option>en:moldova</option>
+                                                <option>en:monaco</option>
+                                                <option>en:mongolia</option>
+                                                <option>en:morocco</option>
+                                                <option>en:mozambique</option>
+                                                <option>en:nederland</option>
+                                                <option>en:netherlands</option>
+                                                <option>en:new-caledonia</option>
+                                                <option>en:new-zealand</option>
+                                                <option>en:niger</option>
+                                                <option>en:norway</option>
+                                                <option>en:pakistan</option>
+                                                <option>en:panama</option>
+                                                <option>en:peru</option>
+                                                <option>en:philippines</option>
+                                                <option>en:poland</option>
+                                                <option>en:polska</option>
+                                                <option>en:portugal</option>
+                                                <option>en:qatar</option>
+                                                <option>en:republic-of-the-congo</option>
+                                                <option>en:republique-de-chine</option>
+                                                <option>en:reunion</option>
+                                                <option>en:romania</option>
+                                                <option>en:russia</option>
+                                                <option>en:saint-pierre-and-miquelon</option>
+                                                <option>en:saudi-arabia</option>
+                                                <option>en:scotland</option>
+                                                <option>en:senegal</option>
+                                                <option>en:serbia</option>
+                                                <option>en:singapore</option>
+                                                <option>en:sint-maarten</option>
+                                                <option>en:slovakia</option>
+                                                <option>en:slovenia</option>
+                                                <option>en:south-africa</option>
+                                                <option>en:south-korea</option>
+                                                <option value="es">en:spain</option>
+                                                <option>en:sri-lanka</option>
+                                                <option>en:sweden</option>
+                                                <option value="ch">en:switzerland</option>
+                                                <option>en:syria</option>
+                                                <option>en:taiwan</option>
+                                                <option>en:tanzania</option>
+                                                <option>en:thailand</option>
+                                                <option>en:thailanda</option>
+                                                <option>en:togo</option>
+                                                <option>en:tunisia</option>
+                                                <option>en:turkey</option>
+                                                <option>en:ukraine</option>
+                                                <option>en:united-arab-emirates</option>
+                                                <option value="uk">en:united-kingdom</option>
+                                                <option>en:united-states</option>
+                                                <option>en:vanuatu</option>
+                                                <option>en:venezuela</option>
+                                                <option>en:vietnam</option>
+                                                <option>en:yemen</option>
+                                                <option>es:europe</option>
+                                                <option>fr:europe</option>
+                                                <option value="ca">fr:quebec</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Store</td>
+                                        <td>
+                                            <select id="input_store" title="select a store">
+                                                <option></option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Product ref.</td>
+                                        <td>
+                                            <div id="panel_input_code">
+                                                <input id='input_product_code' type='text' title="product code"
+                                                       value=""/>
+                                                <div id="submitBtn" name="submitBtn">Go!</div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="msg_warning_prod_ref">&nbsp;</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="graph">&nbsp;</div>
+
+<!-- Panel for the suggestion of products with a better score -->
+<div id="products_suggestion">
+
+</div>
+<div id="menu_selection">
+    <div>
+        <div id="nb_suggestions"></div>
+        <br/>
+        suggestion(s)
+    </div>
+    <img src="{{ url_for('static',filename='images/leftArrow.png') }}"
+         title="previous product" onclick="select_picture(-1)"/>
+    <img src="{{ url_for('static',filename='images/details.png') }}"
+         title="compare this product" onclick="show_details()"/>
+    <img src="{{ url_for('static',filename='images/rightArrow.png') }}"
+         title="next product" onclick="select_picture(+1)"/>
+</div>
+
+<div id="server_log_cell">
+    <table id="server_log">
+        <tr id="server_log_header_row">
+            <td>Server activity</td>
+            <td>
+                <div id="server_activity">
+                    <img width="48px" src="{{ url_for('static',filename='images/giphy5.gif') }}"
+                         title="server busy"/>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="echoResultLog"
+                >&nbsp;</div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script type="text/javascript">init()</script>
+
+{% endblock %}
+</body>
+</html>

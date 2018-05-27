@@ -1,0 +1,110 @@
+body {
+    font-family: Arial;
+    font-size: xx-large;
+}
+
+#banner {
+    width: 98%;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    padding-top: 0.3em;
+    padding-bottom: 0.2em;
+}
+
+#cell_product_image {
+    text-align: center;
+    width: 23%;
+}
+
+#prod_ref_image {
+    max-width: 99%;
+}
+
+#product_details {
+    width: auto;
+    height: 2.2em;
+    font-size: larger;
+    text-align: center;
+    overflow-y: hidden;
+}
+
+#prod_ref_code {
+    font-weight: bold;
+}
+
+#criteria {
+    font-size: inherit;
+    text-align: right;
+    padding: 0px;
+    margin: 0px;
+    min-width: 99%;
+}
+
+#msg_warning_prod_ref {
+    font-size: normal;
+    color: red;
+}
+
+#submitBtn {
+    background-color: #09f;
+    font-size: 24pt;
+    border-radius: 5px;
+    float: right;
+    margin-left: 20px;
+    padding: 20px;
+    padding-top:30px;
+    height: 48px;
+    width: 48px;
+    text-align: center;
+}
+
+td > select {
+    font-size: inherit;
+    width: 18em;
+}
+
+#input_product_code {
+    font-size: inherit;
+    width: 13em;
+}
+
+#links_off {
+    text-align: center;
+    vertical-align: bottom;
+    padding: 0px;
+    margin: 0px;
+}
+
+#panel_input_code {
+    font-size: inherit;
+    display: inline;
+    float: left;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 450px;
+    height: 140px;
+    padding: 2px;
+    font: 10px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+#server_log_cell > * {
+    display: none !important;
+}
+
