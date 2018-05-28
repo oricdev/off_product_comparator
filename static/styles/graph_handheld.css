@@ -42,8 +42,12 @@ body {
     min-width: 99%;
 }
 
+#criteria * {
+    vertical-align: top;
+}
+
 #msg_warning_prod_ref {
-    font-size: normal;
+    font-size: small;
     color: red;
 }
 
@@ -81,6 +85,10 @@ td > select {
     font-size: inherit;
     display: inline;
     float: left;
+}
+
+#svg_graph {
+    font-size: medium;
 }
 
 .axis path,

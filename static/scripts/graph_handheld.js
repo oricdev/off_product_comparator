@@ -1,6 +1,5 @@
-var circles = [];
-var svg;
-var g;
+
+
 
 /* draw SVG graph:
  - id_attach_graph: id of html-item for attaching the graph itself
@@ -15,7 +14,7 @@ function draw_graph(id_attach_graph,
                     item_display_code_of_selected_product,
                     open_off_page) {
     // Set the dimensions of the canvas / graph
-    var margin = {top: 5, right: 4, bottom: 5, left: 3},
+    var margin = {top: 30, right: 30, bottom: 60, left: 50},
         width = GRAPH_WIDTH - margin.left - margin.right - (GRAPH_WIDTH * 4 / 100),
         height = GRAPH_HEIGHT - margin.top - margin.bottom;
 
@@ -33,7 +32,7 @@ function draw_graph(id_attach_graph,
     var xAxis = d3.svg.axis().scale(x)
         .orient("bottom").ticks(nb_categs_displayed)
         .tickFormat(function (d) {
-            if (d == 0)
+            if (d == x_axis_min_value)
                 return "low";
             if (d == 1)
                 return "high";
@@ -64,13 +63,13 @@ function draw_graph(id_attach_graph,
         .style("display", "none");
 
     // Adds the svg canvas
-    svg = d3.select("body")
+    var svg = d3.select("body")
         .append("svg")
         .attr("id", "svg_graph")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom),
-        g = svg.append("g")
-            .attr("transform",
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
 
     // Scale the range of the data
@@ -138,11 +137,9 @@ function draw_graph(id_attach_graph,
     // .. for all matching products
     var data_others = prod_matching;
 
-    circles = svg.selectAll("circle")
-        .data(data_others);
-
-    circles.enter()
-        .append("circle")
+    svg.selectAll("circle")
+        .data(data_others)
+        .enter().append("circle")
         .attr("r", CIRCLE_RADIUS_DEFAULT)
         .attr("stroke", "#000080")
         .attr("stroke-width", 1)
@@ -205,7 +202,8 @@ function draw_graph(id_attach_graph,
         .attr("y", -45)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .style("font-size", "inherit");
+        .style("font-size", "inherit")
+        .text("Nutrition score");
 
     $(id_attach_graph).empty();
     $("svg").detach().appendTo(id_attach_graph);

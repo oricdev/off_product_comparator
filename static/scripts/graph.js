@@ -15,8 +15,8 @@ function draw_graph(id_attach_graph,
         width = GRAPH_WIDTH - margin.left - margin.right,
         height = GRAPH_HEIGHT - margin.top - margin.bottom;
 
-    var x = d3.scale.linear().range([0, width]);
-    var y = d3.scale.linear().range([height, 0]);
+    var x = d3.scale.linear().range([30, width]);
+    var y = d3.scale.linear().range([height, 30]);
 
     var nb_categs = 7;
     var nb_nutrition_grades = 5;
@@ -103,6 +103,7 @@ function draw_graph(id_attach_graph,
         .attr("fill", "#ffffff")
         .attr("fill-opacity", 0.75)
     // .. for all matching products
+    // todo: ICI variable prod_others_points à setter
     var data_others = prod_matching;
 
     svg.selectAll("circle")
@@ -153,7 +154,7 @@ function draw_graph(id_attach_graph,
         .attr("y", height + 30)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .style("font-size", "12pt")
+        .style("font-size", "x-small")
         .text("Similarity with product reference");
 
     // Add the Y Axis
@@ -168,7 +169,7 @@ function draw_graph(id_attach_graph,
         .attr("y", -45)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .style("font-size", "12pt")
+        .style("font-size", "x-small")
         .text("Nutrition grade");
 
     $(id_attach_graph).empty();
