@@ -54,7 +54,7 @@ var MSG_NO_DATA_RETRIEVED = "Beware: it seems no data for making the comparison 
 
 // Others
 // Circles drawn in SVG in the graph are appended after some basic other SVG-items; thereafter, 1 circle is bound to 1 product with the shift constant below
-var SHIFT_ARRAY_POSITION_SVG_CIRCLES_VS_PRODUCTS = 8;
+var SHIFT_ARRAY_POSITION_SVG_CIRCLES_VS_PRODUCTS = 7;
 var CIRCLE_COLOR_DEFAULT = "steelblue";
 var CIRCLE_COLOR_SELECTED = "red";
 var CIRCLE_RADIUS_DEFAULT = 2;

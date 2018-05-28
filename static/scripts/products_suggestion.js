@@ -52,7 +52,8 @@ function deactivate_previous_selection() {
         class_for_grade = "grade_" + suggested_products[client_current_selection[0]].final_grade;
         client_current_selection[1].setAttribute("class", class_for_grade);
 
-        circle_node = $("#svg_graph")[0].childNodes[suggested_products[client_current_selection[0]].num_circle + SHIFT_ARRAY_POSITION_SVG_CIRCLES_VS_PRODUCTS];
+        circle_node = $("#svg_graph")[0].childNodes[0]
+            .childNodes[suggested_products[client_current_selection[0]].num_circle + SHIFT_ARRAY_POSITION_SVG_CIRCLES_VS_PRODUCTS];
         circle_node.setAttribute("r", "" + CIRCLE_RADIUS_DEFAULT + "");
         circle_node.setAttribute("fill", CIRCLE_COLOR_DEFAULT);
     }
@@ -62,11 +63,13 @@ function activate_selection() {
     // Box around selection in the ribbon
     client_current_selection[1].setAttribute("class", "product_selected");
     // focus cirlce bound to selection
-    circle_node = $("#svg_graph")[0]
+    circle_node = $("#svg_graph")[0].childNodes[0]
         .childNodes[suggested_products[client_current_selection[0]].num_circle + SHIFT_ARRAY_POSITION_SVG_CIRCLES_VS_PRODUCTS];
     circle_node.setAttribute("r", "" + CIRCLE_RADIUS_SELECTED + "");
     circle_node.setAttribute("fill", CIRCLE_COLOR_SELECTED);
     $(ID_INPUT_PRODUCT_CODE).val(suggested_products[client_current_selection[0]].code);
+    /*selected_product_url = suggested_products[client_current_selection[0]].url;
+    window.open(selected_product_url, '_blank');*/
 }
 
 /*

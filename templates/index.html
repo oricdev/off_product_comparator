@@ -21,11 +21,8 @@
 
 <!-- GRAPH HEADER -->
 
-<div id="banner"><a style="color: white;"
-                    href='https://world.openfoodfacts.org'
-                    target='_blank'>OPENFOODFACTS</a>
-    PRODUCT COMPARATOR
-</div>
+<div id="banner">Open Food Facts - Product comparison</div>
+
 <div id="product_details"><span id="prod_ref_code">&nbsp;</span> &nbsp;&nbsp;
     <span id="prod_ref_name"/></div>
 <div style='width: 98%; text-align: right;'>
@@ -223,7 +220,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Product ref.</td>
+                                        <td>Barcode</td>
                                         <td>
                                             <div id="panel_input_code">
                                                 <input id='input_product_code' type='text' title="product code"
@@ -248,9 +245,7 @@
 <div id="graph">&nbsp;</div>
 
 <!-- Panel for the suggestion of products with a better score -->
-<div id="products_suggestion">
-
-</div>
+<!-- navigation icons -->
 <div id="menu_selection">
     <div>
         <div id="nb_suggestions"></div>
@@ -264,6 +259,11 @@
     <img src="{{ url_for('static',filename='images/rightArrow.png') }}"
          title="next product" onclick="select_picture(+1)"/>
 </div>
+
+<div id="products_suggestion">
+
+</div>
+
 
 <div id="server_log_cell">
     <table id="server_log">
