@@ -59,3 +59,10 @@ var CIRCLE_COLOR_DEFAULT = "steelblue";
 var CIRCLE_COLOR_SELECTED = "red";
 var CIRCLE_RADIUS_DEFAULT = 2;
 var CIRCLE_RADIUS_SELECTED = 15;
+
+// file location listing all countries in OFF
+var FILE_COUNTRIES = "/static/data/countries.json";
+/* addition of extra properties to ease sorting */
+var COUNTRY_PROPERTY_EN_LABEL = "en_label";
+var COUNTRY_PROPERTY_EN_NAME = "en_name";
+var COUNTRY_PROPERTY_EN_CODE = "en_code";
