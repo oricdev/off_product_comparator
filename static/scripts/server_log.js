@@ -9,7 +9,7 @@ function server_log() {
         url: $SCRIPT_ROOT + "/fetchAjax/",
         contentType: "application/json; charset=utf-8",
         data: {echoValue: $(ID_INPUT_PRODUCT_CODE).val(),
-            country: $(ID_INPUT_COUNTRY+" option:selected")[0].text,
+            country: $(ID_INPUT_COUNTRY+" option:selected")[0].value,
             store: $(ID_INPUT_STORE+" option:selected")[0].text},
         success: function (data) {
             // server activity received
