@@ -33,8 +33,8 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route("/")
 def helloAjax():
-    # return render_template('index.html')
-    return render_template('site_under_maintenance.html')
+    return render_template('index.html')
+    # return render_template('site_under_maintenance.html')
 
 @app.route("/admin")
 def helloAjaxAdmin():
