@@ -33,8 +33,8 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route("/")
 def helloAjax():
-    return render_template('index.html')
-    # return render_template('site_under_maintenance.html')
+    # return render_template('index.html')
+    return render_template('site_under_maintenance.html')
 
 @app.route("/admin")
 def helloAjaxAdmin():
@@ -47,42 +47,21 @@ def devAjax():
 
 @app.route('/fetchAjax/', methods=['GET'])
 def fetchAjax():
-    @copy_current_request_context
-    def fetch_product():
-        ProductFetcher.fetch_product(code, country, store, request.remote_addr)
+    pprint("[/fetchAjax/] request is:%r" % request)
 
-    # STARTING_CODE for fetchAjax() -- leave blank above for the thread!
-
-    # check that no other request is running (for now, only 1 is permitted
-    # .. pending for session implementation in Flask)
-    if len(Log.Log.get_bunch(0)) > 0:
-        msg_server_not_available = ['WARNING: this is a DEMO version, and for now only one single request at a time may \
-                                     run on the server.',
-                                    'The server is right now not available for processing your request \
-                                     since another request is already running!',
-                                    '',
-                                    "But don't be desperate: GIVE IT ANOTHER TRY in a few seconds...",
-                                    'Thank you for your understanding!',
-                                    "ciao!"
-                                    ]
-        return jsonify({"value": msg_server_not_available})
-    else:
-        code = str(request.args.get('echoValue'))
-        country = str(request.args.get('country'))
-        store = str(request.args.get('store'))
-        # initialize log for user's Ajax requests
-        Log.Log()
-        # Launch search thread
-        global thread
-        thread = Thread(target=fetch_product)
-        thread.start()
-        Log.Log.add_msg("Request received by server!")
-        Log.Log.add_msg("Your IP-address is %s" % request.remote_addr)
-        Log.Log.add_msg("&nbsp;")
-        Log.Log.add_msg("search of matching products started for product %s" % code)
-        Log.Log.add_msg("&nbsp;")
-        ret_data = {"value": Log.Log.get_bunch(0)}
-        return jsonify(ret_data)
+    code = str(request.args.get('barcode'))
+    country = str(request.args.get('country'))
+    store = str(request.args.get('store'))
+    # initialize log for user's Ajax requests
+    Log.Log()
+    all_data = ProductFetcher.fetch_product(code, country, store, request.remote_addr)
+    Log.Log.add_msg("Request received by server!")
+    Log.Log.add_msg("Your IP-address is %s" % request.remote_addr)
+    Log.Log.add_msg("&nbsp;")
+    Log.Log.add_msg("search of matching products started for product %s" % code)
+    Log.Log.add_msg("&nbsp;")
+    ret_data = {"value": all_data}
+    return jsonify(ret_data)
 
 
 @app.route('/logAjax/', methods=['GET'])
@@ -99,8 +78,35 @@ def logAjax():
     return jsonify(ret_data)
 
 
+@app.route("/hello")
+def hello():
+    pongo = MongoClient("mongodb://tuttifrutti_oric:Oric1!@mongodb-tuttifrutti.alwaysdata.net/tuttifrutti_off")
+    db = pongo["tuttifrutti_off"]
+    coll_products = db["products"]
+    print "%d products are referenced" % (coll_products.find().count())
+    strCountProducts = str(coll_products.find().count())
+    strOutput = """<h1>Product comparator</h1><br />
+    This site uses data from the <b><a href='http://www.openfoodfacts.org' title='openfoodfacts' target='_blank'>
+    Open Food Facts</a></b> database.<br />
+    <br />
+    <b>""" + strCountProducts + """</b> products are referenced.<br />
+    <br />
+    Enter a product reference to start the comparison with similar products: <input id='product_code' type='text'
+      value='3560070800384' />
+    <input type='submit' style='background-color: blue; color: white'
+    value='Go!' onclick="window.location='http://tuttifrutti.alwaysdata.net/fetch/'+
+    document.getElementById('product_code').value+''" /><br />
+    <br />
+    <div style='color: grey'>NOTE: the number of products shown is intentionally limited.<br />
+    Once you've launched the request, you may wait a few seconds<br />
+    before being able to see the resulting graph. Please be patient..!
+    """
+    return strOutput
+
+
 @app.route('/fetchStores/', methods=['GET'])
 def fetch_stores():
+    pprint ("request is:%r" % request)
     country = request.args.get('country')
     print "country is %r" % country
     print "fetching stores.."
