@@ -1,13 +1,14 @@
 # coding=utf-8
 import os
 import time
+import json
+import urllib
 from threading import Thread
 from flask import Flask, session
 from flask import copy_current_request_context
 # from Flask_Session import Session
 from flask import jsonify, render_template, request
 from pymongo import MongoClient
-
 
 from module import ProductFetcher
 from module import DataEnv
@@ -25,11 +26,11 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 # app.secret_key = "toto cutugno"
 app.config['SESSION_TYPE'] = 'filesystem'
-# # Session(app)
-# SESSION_TYPE = 'redis'
-# app.config.from_object(__name__)
-# Session(app)
 
+# load countries
+file_countries = "./static/data/countries.json"
+with open(file_countries, "r") as fileHandler:
+    data_countries = json.load(fileHandler)
 
 @app.route("/")
 def helloAjax():
@@ -106,24 +107,22 @@ def hello():
 
 @app.route('/fetchStores/', methods=['GET'])
 def fetch_stores():
+    stores = None
     pprint ("request is:%r" % request)
     country = request.args.get('country')
     print "country is %r" % country
-    print "fetching stores.."
-    Log.Log()
-    data_env1 = DataEnv.DataEnv(["countries_tags", "stores_tags"])
-    gui = Gui.Gui(data_env1)
-    querier = Querier.Querier(data_env1, True)
+    # check country is registered (e.g.: "en:france")
+    if country in data_countries:
+        # check if local file exists
+        file_stores = "./static/data/stores/stores_%s.json" % country[3:]
+        if not os.path.exists(file_stores):
+            # file does not exist locally => download it
+            url_list_stores_for_country = "https://world.openfoodfacts.org/country/%s/stores.json" % country[3:]
+            urllib.urlretrieve(url_list_stores_for_country, file_stores)
 
-    # connecting to server
-    querier.connect()
+        with open(file_stores, "r") as fileHandler:
+            stores = json.load(fileHandler)
 
-    # retrieve stores for the country
-    stores = querier.fetch_stores(country)
-
-    querier.disconnect()
-    # reset Log (request accomplished)
-    Log.Log()
     return jsonify(stores)
 
 

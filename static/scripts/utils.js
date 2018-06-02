@@ -4,6 +4,10 @@
 
 // sort function for the countries
 function_sort_countries = getSortMethod('+' + COUNTRY_PROPERTY_EN_NAME);
+// sort function for the stores by number of products backwards (most popular stores)
+var function_sort_stores_by_nb_products = getSortMethod('-' + STORE_PRODUCTS_COUNT_PROPERTY);
+// sort function for the stores by name alphabetically
+var function_sort_stores_by_name = getSortMethod('+' + STORE_NAME_PROPERTY)
 // sort function for both similarity with prod. ref and nutrition score (downwards)
 var function_sort_products = getSortMethod('-final_grade', '-score');
 // sort method for point abscisses (ascending)
