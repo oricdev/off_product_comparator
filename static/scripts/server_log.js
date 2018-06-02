@@ -10,7 +10,7 @@ function server_log() {
         contentType: "application/json; charset=utf-8",
         data: {barcode: $(ID_INPUT_PRODUCT_CODE).val(),
             country: $(ID_INPUT_COUNTRY+" option:selected")[0].value,
-            store: $(ID_INPUT_STORE+" option:selected")[0].text},
+            store: $(ID_INPUT_STORE+" option:selected")[0].value},
         success: function (data) {
             unblock_screen();
             try {

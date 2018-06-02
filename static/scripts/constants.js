@@ -2,6 +2,7 @@
  * Created by olivier on 18/03/18.
  */
 // Minimum proximity of matching products with reference-product for being part of suggestions
+var MAX_STORES_TO_SHOW_PER_COUNTRY = 100;
 var MAX_GRADE = 5;
 var MIN_SCORE_FOR_SUGGESTIONS = 70;
 var MAX_SUGGESTIONS = 50;
@@ -66,3 +67,7 @@ var FILE_COUNTRIES = "/static/data/countries.json";
 var COUNTRY_PROPERTY_EN_LABEL = "en_label";
 var COUNTRY_PROPERTY_EN_NAME = "en_name";
 var COUNTRY_PROPERTY_EN_CODE = "en_code";
+/* property names in the JSON store files */
+var STORE_NAME_PROPERTY = "name";
+var STORE_ID_PROPERTY = "id";
+var STORE_PRODUCTS_COUNT_PROPERTY = "products";

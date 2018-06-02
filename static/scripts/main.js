@@ -82,12 +82,23 @@ function fetch_stores(ctrlCountries) {
             country: ctrlCountries.value
         },
         success: function (data) {
-            var options = data.sort().map(function (store) {
-                return $("<option></option>").val(store).text(store);
-            });
-            $(ID_INPUT_STORE).empty();
-            $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
-            $(ID_INPUT_STORE).append(options);
+            if (data != null) {
+                data.tags.sort(function_sort_stores_by_nb_products);
+                stores_most_relevant = data.tags.filter(function(store, indx) {
+                   return indx < MAX_STORES_TO_SHOW_PER_COUNTRY;  
+                });
+                stores_most_relevant
+                    .sort(function_sort_stores_by_name);
+                var options = stores_most_relevant.map(function (store) {
+                    return $("<option></option>").val(store[STORE_ID_PROPERTY]).text(store[STORE_NAME_PROPERTY]);
+                });
+                $(ID_INPUT_STORE).empty();
+                $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
+                $(ID_INPUT_STORE).append(options);
+            } else {
+                $(ID_INPUT_STORE).empty();
+                $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
+            }
             unblock_screen();
         }
     });
