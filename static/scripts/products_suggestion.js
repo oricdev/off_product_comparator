@@ -30,7 +30,7 @@ function make_suggestions(product_ref, products) {
         products.sort(function_sort_products);
         suggested_products = products.slice(0, MAX_SUGGESTIONS);
         $(ID_NB_SUGGESTIONS).empty();
-        $(ID_NB_SUGGESTIONS).append(suggested_products.length + "/" + products.length);
+        $(ID_NB_SUGGESTIONS).append(suggested_products.length);
         suggested_products.forEach(function (product, index) {
             // $(ID_PRODUCTS_SUGGESTION + " > div").append("<div class='cell_suggestion' onclick='alert("+cx+")'><img src='" + product.img + "' height='150px' /></div>");
             class_for_grade = "grade_" + product.final_grade
