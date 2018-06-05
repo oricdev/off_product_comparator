@@ -22,6 +22,20 @@ body {
     max-width: 99%;
 }
 
+#links_off {
+    font-size: medium;
+}
+
+#links_off > div {
+    padding-top: 0.8em;
+}
+
+#links_off a {
+    text-decoration: none;
+        color: #09f;
+    font-weight: 700;
+}
+
 #product_details {
     width: auto;
     height: 2.2em;
