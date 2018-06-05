@@ -38,20 +38,15 @@
                                  onclick="$(ID_INPUT_PRODUCT_CODE).val(current_product==null? PRODUCT_CODE_DEFAULT : current_product.code)"
                             />
                             <div id="links_off">
-                                <a id="url_off_prod" href='https://world.openfoodfacts.org' target='_blank'>
-                                    <img src='https://static.openfoodfacts.org/images/favicon/apple-touch-icon-57x57.png'
-                                         id="img_off_prod"
-                                         height='28'
-                                         title='see the product details in the openfoodfacts website.'/>
-                                </a>
-                                <a id="url_off_json_prod"
+                                <div><a id="url_off_prod" href='https://world.openfoodfacts.org' target='_blank'>
+                                    Product page
+                                </a></div>
+                                <div><a id="url_off_json_prod"
                                    href='https://fr.openfoodfacts.org/api/v0/produit/3029330003533.json'
                                    target='_blank'>
-                                    <img id="img_off_json"
-                                         src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/JSON_vector_logo.svg/160px-JSON_vector_logo.svg.png'
-                                         height='28'
-                                         title='see json details for the product (best seen on Firefox).'/>
+                                    Product JSON
                                 </a></div>
+                            </div>
                         </td>
                         <td>
                             <div id="prod_ref_categories" style="display:none"></div>
