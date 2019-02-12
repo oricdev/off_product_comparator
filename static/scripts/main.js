@@ -1,60 +1,66 @@
 var nav_language = window.navigator.userLanguage || window.navigator.language;
 var user_country = undefined;
 var current_product = undefined;
-var data_countries = undefined;
+var current_db_for_graph = undefined;
 
 function init() {
-    // load countries
-    $.getJSON(FILE_COUNTRIES, function (json) {
-        countries_json = json;
-        data_countries = $.map(countries_json, function (value, index) {
-            // add to each value the key of the object (e.g. "en:Poland") for future use in REST services
-            value[COUNTRY_PROPERTY_EN_LABEL] = index;
-            value[COUNTRY_PROPERTY_EN_NAME] = value.name["en"];
-            if (value.hasOwnProperty("country_code_2")) {
-                value[COUNTRY_PROPERTY_EN_CODE] = value.country_code_2["en"].toUpperCase();
-            } else if (value.hasOwnProperty("country_code_3")) {
-                value[COUNTRY_PROPERTY_EN_CODE] = value.country_code_3["en"].toUpperCase();
-            } else {
-                value[COUNTRY_PROPERTY_EN_CODE] = "";
-            }
-            return [value];
-        });
+    // load score databases
+    fetch_score_databases();
+    // load countries and set country
+    fetch_countries();
 
-        data_countries.sort(function_sort_countries);
-
-        var options = data_countries.map(function (country) {
-            return $("<option></option>").val(country[COUNTRY_PROPERTY_EN_LABEL]).text(country[COUNTRY_PROPERTY_EN_NAME]);
-        });
-        $(ID_INPUT_COUNTRY).empty();
-        $(ID_INPUT_COUNTRY).append($("<option></option>").val('').text(''));
-        $(ID_INPUT_COUNTRY).append(options);
-        // Leave at the end since Ajax request with callback there!
-        guess_country_from_nav_lang();
-    });
-
-
+    // set score db being used if cached locally: this is useful when using the barcode scanner App
+    // which knows nothing about the current context when it launches the URL back with barcode.
+    // We want to remember which score database is being used by the user
+    current_db_used = getCachedCurrentDatabase();
+    if (current_db_used != undefined) {
+        current_db_for_graph = current_db_used;
+        $(ID_INPUT_SCORE_DB).val(current_db_used[FLD_DB_NICK_NAME]);
+        //alert("using db "+current_db_used[FLD_DB_NICK_NAME]);
+    }
     // $(ID_SERVER_ACTIVITY).css("display", "none");
     $(ID_CELL_BANNER).css("background-color", OFF_BACKGROUND_COLOR);
     $(ID_SERVER_ACTIVITY).css("visibility", "hidden");
-    $(ID_INPUT_PRODUCT_CODE).val(PRODUCT_CODE_DEFAULT);
-    draw_graph(ID_GRAPH, [], [], ID_INPUT_PRODUCT_CODE, OPEN_OFF_PAGE_FOR_SELECTED_PRODUCT);
+    draw_graph(ID_GRAPH, current_db_for_graph, [], [], ID_INPUT_PRODUCT_CODE, OPEN_OFF_PAGE_FOR_SELECTED_PRODUCT);
     cleanup_suggestions();
     $(function () {
         $("#submitBtn").click(server_log);
     });
 
+    // Insert barcode from url if available, otherwise default product barcode
+    url_barcode = getParameterByName(URL_PARAM_BARCODE, window.location.href);
+    if (url_barcode != undefined) {
+        $(ID_INPUT_PRODUCT_CODE).val(url_barcode);
+        server_log();
+    } else {
+        $(ID_INPUT_PRODUCT_CODE).val(PRODUCT_CODE_DEFAULT);
+    }
+
 }
 
 function guess_country_from_nav_lang() {
     is_found = false;
-    nav_country = ( (nav_language.indexOf('-') >= 0) ? nav_language.split('-')[1] : nav_language).toUpperCase();
-    // filter countries and fetch the one holding the country code of the navigator
-    user_country = data_countries.filter(
-        function (ctry) {
-            return ctry[COUNTRY_PROPERTY_EN_CODE] == nav_country;
-        }
-    );
+    data_countries = getCachedCountries();
+    // set country: 1) from url param if set; 2) from navigator
+    url_country = getParameterByName(URL_PARAM_COUNTRY, window.location.href);
+    if (url_country != undefined && url_country != "") {
+        nav_country = url_country;
+        // filter countries and fetch the one holding the country code of the navigator
+        user_country = data_countries.filter(
+            function (ctry) {
+                return ctry[COUNTRY_PROPERTY_EN_LABEL].toLowerCase() == nav_country.toLowerCase();
+            }
+        );
+    } else {
+        nav_country = ( (nav_language.indexOf('-') >= 0) ? nav_language.split('-')[1] : nav_language).toUpperCase();
+        // filter countries and fetch the one holding the country code of the navigator
+        user_country = data_countries.filter(
+            function (ctry) {
+                return ctry[COUNTRY_PROPERTY_EN_CODE] == nav_country;
+            }
+        );
+    }
+
     if (user_country != undefined) {
         for (var index_option in $(ID_INPUT_COUNTRY)[0]) {
             current_option = $(ID_INPUT_COUNTRY)[0][index_option];
@@ -72,34 +78,42 @@ function guess_country_from_nav_lang() {
     }
 }
 
-function fetch_stores(ctrlCountries) {
-    block_screen(MSG_WAITING_SCR_FETCH_STORES);
-    $.ajax({
-        type: "GET",
-        url: $SCRIPT_ROOT + "/fetchStores/",
-        contentType: "application/json; charset=utf-8",
-        data: {
-            country: ctrlCountries.value
-        },
-        success: function (data) {
-            if (data != null) {
-                data.tags.sort(function_sort_stores_by_nb_products);
-                stores_most_relevant = data.tags.filter(function(store, indx) {
-                   return indx < MAX_STORES_TO_SHOW_PER_COUNTRY;  
-                });
-                stores_most_relevant
-                    .sort(function_sort_stores_by_name);
-                var options = stores_most_relevant.map(function (store) {
-                    return $("<option></option>").val(store[STORE_ID_PROPERTY]).text(store[STORE_NAME_PROPERTY]);
-                });
-                $(ID_INPUT_STORE).empty();
-                $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
-                $(ID_INPUT_STORE).append(options);
-            } else {
-                $(ID_INPUT_STORE).empty();
-                $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
-            }
-            unblock_screen();
-        }
-    });
+function fillHtmlElementWithCountries(data_countries) {
+    if (data_countries != null) {
+        var options = data_countries.map(function (country) {
+            return $("<option></option>").val(country[COUNTRY_PROPERTY_EN_LABEL]).text(country[COUNTRY_PROPERTY_EN_NAME]);
+        });
+        $(ID_INPUT_COUNTRY).empty();
+        $(ID_INPUT_COUNTRY).append($("<option></option>").val('').text(''));
+        $(ID_INPUT_COUNTRY).append(options);
+
+        guess_country_from_nav_lang();
+    }
+}
+
+function fillHtmlElementWithStores(stores_by_country) {
+    if (stores_by_country != null) {
+        var options = stores_by_country.map(function (store) {
+            return $("<option></option>").val(store[STORE_ID_PROPERTY]).text(store[STORE_NAME_PROPERTY]);
+        });
+        $(ID_INPUT_STORE).empty();
+        $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
+        $(ID_INPUT_STORE).append(options);
+    } else {
+        $(ID_INPUT_STORE).empty();
+        $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
+    }
+}
+
+function fillHtmlElementWithDatabases(score_databases) {
+    if (score_databases != null) {
+        var options = score_databases.map(function (score_db) {
+            return $("<option></option>").val(score_db[FLD_DB_NICK_NAME]).text(score_db[FLD_DB_DISPLAY_NAME]);
+        });
+        $(ID_INPUT_SCORE_DB).empty();
+        $(ID_INPUT_SCORE_DB).append(options);
+    } else {
+        $(ID_INPUT_SCORE_DB).empty();
+        $(ID_INPUT_SCORE_DB).append($("<option></option>").val('').text(''));
+    }
 }

@@ -265,6 +265,6 @@ function draw_page(prod_ref, prod_matching) {
         prod_matching,
         ID_INPUT_PRODUCT_CODE,
         OPEN_OFF_PAGE_FOR_SELECTED_PRODUCT);
-    make_suggestions(prod_ref, prod_matching);
+    make_suggestions(prod_ref, prod_matching, current_db_for_graph);
 }
 

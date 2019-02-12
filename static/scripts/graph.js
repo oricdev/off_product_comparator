@@ -88,9 +88,9 @@ function draw_graph(id_attach_graph,
 
     // Add the scatterplot
     // .. for the product reference
-    var data_prod_ref = [{'nutrition_grade': 1}];
+    var data_prod_ref = [{'score': 1}];
     if (prod_ref.length != 0)
-        data_prod_ref = [{'nutrition_grade': prod_ref["y_val_real"]}];
+        data_prod_ref = [{'score': prod_ref["score"]}];
     svg.selectAll("ellipse")
         .data(data_prod_ref)
         .enter().append("ellipse")
@@ -193,7 +193,7 @@ function display_product_ref_details(prod_ref,
     }
     no_nutriments = prod_ref["no_nutriments"];
     categories = prod_ref["categories_tags"].join("<br />");
-    url_off = prod_ref["url_product"];
+    url_off = urlReplaceWorldWithSelectedCountry(prod_ref["url_product"]);
     url_json = prod_ref["url_json"];
     $(id_code).empty();
     $(id_code).append(code);

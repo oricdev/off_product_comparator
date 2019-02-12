@@ -6,7 +6,6 @@ import numpy
 
 from module import PointRepartition
 from module import Product
-from module import Log
 
 
 class Graph:
@@ -40,19 +39,20 @@ class Graph:
         self.data_set_others = []
         self.xaxis_others_distributed = []
         self.yaxis_others_distributed = []
+        # todo: use this one d3 for d3.js Page!
         self.d3_json = []
 
     def show(self):
-        if self.verbose:
-            Log.Log.add_msg("&nbsp;")
-            Log.Log.add_msg("GRAPH process started..")
+        # if self.verbose:
+        #     Log.Log.add_msg("&nbsp;")
+        #     Log.Log.add_msg("GRAPH process started..")
 
         self.prepare_data()
         return self.prepare_graph()
 
     def prepare_data(self):
-        if self.verbose:
-            Log.Log.add_msg("preparing the data..")
+        # if self.verbose:
+        #     pprint("preparing the data..")
 
         try:
             # preparing product reference
@@ -76,7 +76,8 @@ class Graph:
                          "score_proximity": self.product_ref.score_proximity,
                          "score_nutrition": self.product_ref.score_nutrition,
                          "x_val_real": self.product_ref.score_proximity,
-                         "y_val_real": self.product_ref.convert_scoreval_to_note()
+                         #"y_val_real": self.product_ref.score,
+                         "score": self.product_ref.score
                          # ,
                          # "x_val_graph": self.product_ref.score_proximity,
                          # "y_val_graph": self.convert_scoreval_to_note(self.product_ref.score_nutrition)
@@ -93,8 +94,8 @@ class Graph:
             self.data_set_ref.append(mini_prod)
 
             # preparing data for all other matching products
-            if self.verbose:
-                Log.Log.add_msg("computing NUTRITION SCORE for %i products" % len(self.products_matching))
+            # if self.verbose:
+            #     pprint("computing NUTRITION SCORE for %i products" % len(self.products_matching))
 
             products_ignored = 0
             products_ignored_codes = []
@@ -102,7 +103,8 @@ class Graph:
             for product in self.products_matching:
                 # product = product.encode('utf-8')
                 assert isinstance(product, Product.Product)
-                product.compute_scores(self.product_ref)
+                # score are already computed in the Prosim-db; needs to be reactivated only if standard OFF-db is used!
+                #product.compute_scores(self.product_ref)
 
                 if not product.excludeFromGraph and not product.excludeIntersectTooLow:
                     name = self.get_product_name(product.dic_props)
@@ -119,7 +121,7 @@ class Graph:
                                  # "lc": product.dic_props["lc"],
                                  "languages_codes": product.dic_props["languages_codes"],
                                  "score_nutrition": str(product.score_nutrition),
-                                 "final_grade": str(product.final_grade),
+                                 "score": str(product.score),
                                  "image_fake_off": \
                                      'https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-fr-178x150.png'
                                  }
@@ -135,10 +137,10 @@ class Graph:
                     #     mini_prod["images"] = 'https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-fr-178x150.png'
                     mini_prod["score_proximity"] = product.score_proximity
                     mini_prod["score_nutrition"] = product.score_nutrition
-                    mini_prod["x_val_real"] = product.score_proximity
-                    mini_prod["y_val_real"] = product.final_grade
+                    mini_prod["x_val_real"] = product.score_proximity/100;
+                    mini_prod["score"] = product.score
                     self.xaxis_others_real.append(mini_prod["x_val_real"])
-                    self.yaxis_others_real.append(mini_prod["y_val_real"])
+                    self.yaxis_others_real.append(mini_prod["score"])
                     self.data_set_others.append(mini_prod)
                 elif product.excludeFromGraph:
                     products_ignored += 1
@@ -146,18 +148,20 @@ class Graph:
                 elif product.excludeIntersectTooLow:
                     products_intersection_too_low += 1
 
-            if products_intersection_too_low > 0 and self.verbose:
-                Log.Log.add_msg("%i products have a score similarity with product ref. below 50%% and have been excluded" %
-                                (products_intersection_too_low))
-            if products_ignored > 0 and self.verbose:
-                # Log.Log.add_msg("%i additional products have been excluded due to a lack of information (%r)" %
-                #                 (products_ignored, products_ignored_codes))
-                Log.Log.add_msg("%i additional products have been excluded due to a lack of information" %
-                                (products_ignored))
-        except Exception:
+            # if products_intersection_too_low > 0 and self.verbose:
+            #     Log.Log.add_msg("%i products have a score similarity with product ref. below 50%% and have been excluded" %
+            #                     (products_intersection_too_low))
+            # if products_ignored > 0 and self.verbose:
+            #     # Log.Log.add_msg("%i additional products have been excluded due to a lack of information (%r)" %
+            #     #                 (products_ignored, products_ignored_codes))
+            #     Log.Log.add_msg("%i additional products have been excluded due to a lack of information" %
+            #                     (products_ignored))
+        except Exception, e:
             self.data_set_others = []
-            Log.Log.add_msg("&nbsp;")
-            Log.Log.add_msg("sorry, the process has been aborted!")
+            # Log.Log.add_msg("&nbsp;")
+            # Log.Log.add_msg("sorry, the process has been aborted!")
+            pprint("sorry, the process has been aborted!")
+            pprint(e)
 
     def prepare_graph(self):
         """
@@ -168,18 +172,20 @@ class Graph:
         :return:
         """
         if len(self.data_set_ref) == 0:
-            Log.Log.add_msg('')
-            Log.Log.add_msg('No data retrieved for the code you have entered!')
+            print "No data retrieved for the code you have entered!"
+            # Log.Log.add_msg('')
+            # Log.Log.add_msg('No data retrieved for the code you have entered!')
         else:
-            if self.verbose:
-                Log.Log.add_msg('')
-                Log.Log.add_msg("for all %i matching products:" % len(self.data_set_others))
-                Log.Log.add_msg("&nbsp;&nbsp;&nbsp;&nbsp;computing COORDINATES")
+            # if self.verbose:
+            #     Log.Log.add_msg('')
+            #     Log.Log.add_msg("for all %i matching products:" % len(self.data_set_others))
+            #     Log.Log.add_msg("&nbsp;&nbsp;&nbsp;&nbsp;computing COORDINATES")
 
+                # todo: ugly code: to be deeply reviewed
             # prepare for product reference
             nb_categs_ref = len(self.product_ref.dic_props["categories_tags"])
             self.xaxis_prod_ref_real.append(nb_categs_ref * self.data_set_ref[0]["x_val_real"])
-            self.yaxis_prod_ref_real.append(self.data_set_ref[0]["y_val_real"])
+            self.yaxis_prod_ref_real.append(self.data_set_ref[0]["score"])
             label_prod_ref = self.data_set_ref[0]["code"]
             self.label_prod_ref.append(label_prod_ref)
 
@@ -195,11 +201,11 @@ class Graph:
                 v_x.append(x0[0])
                 v_y.append(y0[0])
 
-            if self.verbose:
-                Log.Log.add_msg("&nbsp;&nbsp;&nbsp;&nbsp;preparing TOOLTIPS")
+            # if self.verbose:
+            #     Log.Log.add_msg("&nbsp;&nbsp;&nbsp;&nbsp;preparing TOOLTIPS")
 
             for mini_prod, x0, y0 in zip(self.data_set_others, v_x, v_y):
-                x, y = mini_prod["x_val_real"], mini_prod["y_val_real"]
+                x, y = mini_prod["x_val_real"], mini_prod["score"]
                 # print "miniprod = %d, %d" % (x, y)
                 # NOTE: since we display 2 graphs (1 for all points, and 1 for the coloured stripes with a specific design
                 #  for the CELL matching the product reference, we need to extend the x Values (mult. by nb categs
@@ -222,7 +228,7 @@ class Graph:
                 url_prod = url_prod.encode('utf-8')
                 url_img = self.get_url_image(mini_prod)
                 categs = self.get_categories_html(self.data_set_ref[0]["categories_tags"], mini_prod["categories_tags"])
-                score_proximity = str(int(mini_prod["score_proximity"]*100))
+                #score_proximity = str(int(mini_prod["score_proximity"]*100))
 
                 # print "URL IMG:"
                 # print url_img
@@ -234,7 +240,7 @@ class Graph:
                             (mini_prod["code"],
                              " // ".join(mini_prod["brands_tags"]),
                              mini_prod["name"],
-                             score_proximity,
+                             mini_prod["score_proximity"],
                              url_img,
                              categs)
                 # print "ALL properties of objects: "
@@ -249,11 +255,11 @@ class Graph:
                                      "content": the_label,
                                      "brands": " // ".join(mini_prod["brands_tags"]),
                                      "name": mini_prod["name"],
-                                     "score": score_proximity,
+                                     "score_proximity": mini_prod["score_proximity"],
                                      "img": url_img,
                                      "categories": categs,
                                      "score_nutrition": mini_prod["score_nutrition"],
-                                     "final_grade": mini_prod["final_grade"]})
+                                     "score": mini_prod["score"]})
 
             # self.prod_ref_real = {"code": self.product_ref.dic_props["code"],
             #                       "generic_name": self.product_ref.dic_props["generic_name"],

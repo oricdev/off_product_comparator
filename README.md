@@ -1,10 +1,27 @@
 <h1>OpenFoodFacts Product Comparator</h1>
 
-<p>Link for testing: <a href="https://tuttifrutti.alwaysdata.net" target="_blank">tuttifrutti.alwaysdata.net</a>.</p>
-<p>[see restrictions mentioned below.]<p>
+<p>Also known as OFF-Graph, is makes it possible to type in (or <a href="https://offgraphs.blogspot.com/2018/09/create-your-off-graph-app.html" target="_blank">scan</a>) the barcode of a product and to get almost instantly within a user-friendly graph 
+one of its scores (<a href="https://tuttifrutti.alwaysdata.net" target="_blank"></a>Nutrition score, <a href="https://tuttifrutti.alwaysdata.net" target="_blank"></a>Nova Classification score), or even your <a href="https://offmatch.blogspot.com/2018/10/how-can-i-request-new-score-database.html" target="_blank">own score</a> if you wish to build it!
+</p>
+<p>
+Language of the application is <b>English</b>.
+</p>
+<p>
+Refer to the following links for more details:<br/>
+<ul>
+<li>For using the application: <a href="https://tuttifrutti.alwaysdata.net" target="_blank">tuttifrutti.alwaysdata.net</a></li>
+<li><a href="https://offgraphs.blogspot.com/" target="_blank">OFF-Graph blog</a></li>
+<li><b>PROSIM</b> backend engine (<a href="https://github.com/oricdev/prosim" target="_blank">source code here</a>) and blog <a href="https://offmatch.blogspot.com/" target="_blank">here</a></li>
+<li><b>API</b> starting point is provided by <b>app.py</b> and detailed <a href="https://offgraphs.blogspot.com/2018/09/api-usage-for-getting-similar-products.html" target="_blank">here</a>.
+<li>follow on <a href="https://twitter.com/GraphProsim" target="_blank">Twitter</a></li>
+</ul>
+</p>
+<p>
+<u><b>Note:</b></u> some pieces of code or even some files may be unused and were not cleaned up. Sorry about this inconvenience guys! In case of doubt, feel free to ask me ;)
+</p>
 <h2>Tech used</h2>
 <p>This project uses data from the <a href="https://world.openfoodfacts.org/">OPENFOODFACTS</a> database.</p>
-<p>It is developped using Python 2.7 WSGI (backend) and html/css/ajax (frontend).</p>
+<p>It is developped using Python 2.7 WSGI (backend) and html/css/ajax/js/d3js (frontend).</p>
 <p>It is browser-based and hence intended to be used on any kind of devices (smartphones, tablets, desktops).</p>
 
 <h2>How to use?</h2>
@@ -24,13 +41,6 @@ Click on the magnifying glass to see some description of the product.
 <img src="https://github.com/oricdev/off_product_comparator/blob/master/_documentation/images/scr_details_suggested_product.png"
 title="details of a similar product chosen in the ribbon"
 height="350px" />
-
-<h2>KNOWN RESTRICTIONS</h2>
-This project is in early stage and has currently some restrictions which need to be cleared off in later stages:
-<ul>
-<li>1 user request at a time</li>
-<li>optimization of matching searches</li>
-</ul>
 
 <h2>How to install</h2>
 <h3>Configuring your WSGI site</h3>

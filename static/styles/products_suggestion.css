@@ -20,28 +20,33 @@
     border: solid thin #0099ff;
 }
 
+img.grade_border {
+    border: 18px solid rgb(230, 62, 17);
+}
+/*
 img.grade_1 {
-    border: 7px solid rgb(230, 62, 17);
+    border: 18px solid rgb(230, 62, 17);
 }
 
 img.grade_2 {
-    border: 7px solid rgb(238, 129, 0);
+    border: 18px solid rgb(238, 129, 0);
 }
 
 img.grade_3 {
-    border: 7px solid rgb(254, 203, 2);
+    border: 18px solid rgb(254, 203, 2);
 }
 
 img.grade_4 {
-    border: 7px solid rgb(133, 187, 47);
+    border: 18px solid rgb(133, 187, 47);
 }
 
 img.grade_5 {
-    border: 7px solid rgb(3, 129, 65);
+    border: 18px solid rgb(3, 129, 65);
 }
+*/
 
 .product_selected {
-    border: 12px solid #0099ff;
+    border: 18px solid #0099ff;
 }
 
 #menu_selection {

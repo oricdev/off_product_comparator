@@ -1,10 +1,11 @@
 # coding=utf-8
 import os
+import datetime
 import time
 import json
 import urllib
 from threading import Thread
-from flask import Flask, session
+from flask import Flask, session, redirect
 from flask import copy_current_request_context
 # from Flask_Session import Session
 from flask import jsonify, render_template, request
@@ -34,36 +35,144 @@ with open(file_countries, "r") as fileHandler:
 
 @app.route("/")
 def helloAjax():
+    pprint("INCOMING (/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
     return render_template('index.html')
-    # return render_template('site_under_maintenance.html')
+    #return render_template('site_under_maintenance.html')
 
 @app.route("/admin")
 def helloAjaxAdmin():
+    pprint("INCOMING (/admin) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
     return render_template('index_full.html')
     # return render_template('site_under_maintenance.html')
 
-@app.route("/dev")
+# Leave /test since JS filters dbs (see 'filterDatabases')
+@app.route("/testdev")
 def devAjax():
-    return render_template('index.html')
+    pprint("INCOMING (/testdev) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    return render_template('index_dev.html')
+    # return render_template('index.html')
+
+@app.route("/test")
+def testAjax():
+    pprint("INCOMING (/test) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    return render_template('index_test.html')
+
+@app.route("/stats")
+def statsAjax():
+    pprint("INCOMING (/stats) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    return render_template('stats.html')
 
 @app.route('/fetchAjax/', methods=['GET'])
 def fetchAjax():
-    pprint("[/fetchAjax/] request is:%r" % request)
+    pprint("INCOMING (/fetchAjax) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    #pprint("[/fetchAjax/] request is:%r" % request)
 
     code = str(request.args.get('barcode'))
     country = str(request.args.get('country'))
     store = str(request.args.get('store'))
+    score= str(request.args.get('score'))
+
     # initialize log for user's Ajax requests
     Log.Log()
-    all_data = ProductFetcher.fetch_product(code, country, store, request.remote_addr)
+    all_data = ProductFetcher.fetch_product(code, country, store, score, request.remote_addr)
     Log.Log.add_msg("Request received by server!")
     Log.Log.add_msg("Your IP-address is %s" % request.remote_addr)
     Log.Log.add_msg("&nbsp;")
     Log.Log.add_msg("search of matching products started for product %s" % code)
     Log.Log.add_msg("&nbsp;")
-    ret_data = {"value": all_data}
+    ret_data = {"graph": all_data}
     return jsonify(ret_data)
 
+@app.route('/fetchP/', methods=['GET'])
+def fetchP():
+    """
+    Fetches details of 1 single product code, including those in tag 'similarity'
+    Raw data, nt intended for tuttifrutti graph
+    :return:
+    """
+    pprint("INCOMING (/fetchP/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    #pprint("[/fetchP/] request is:%r" % request)
+
+    code = str(request.args.get('barcode'))
+    score = str(request.args.get('score'))
+    #country = str(request.args.get('country'))
+    #store = str(request.args.get('store'))
+    if score == 'None':
+        score = ''
+
+    product = ProductFetcher.P_fetch_product_details(code, score)
+    #ret_data = {"value": product}
+    return json.dumps(product)
+
+@app.route('/fetchPMatch/', methods=['GET'])
+def fetchPMatch():
+    """
+    Fetches product reference details (with similarity details) and retrieves
+     ALL matching products referenced in tag 'similarity'
+     Raw data, nt intended for tuttifrutti graph
+    :return:
+    """
+    pprint("INCOMING (/fetchPMatch/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    #pprint("[/fetchPMatch/] request is:%r" % request)
+
+    code = str(request.args.get('barcode'))
+    country = str(request.args.get('country'))
+    store = str(request.args.get('store'))
+    score = str(request.args.get('score'))
+    if country == 'None':
+        country = ''
+    if store == 'None':
+        store = ''
+    if score == 'None':
+        score = ''
+
+    (prod_ref, matching_products) = ProductFetcher.PM_fetch_product(code, country, store, score)
+    # Log.Log.add_msg("Request received by server!")
+    # Log.Log.add_msg("Your IP-address is %s" % request.remote_addr)
+    # Log.Log.add_msg("&nbsp;")
+    # Log.Log.add_msg("search of matching products started for product %s" % code)
+    # Log.Log.add_msg("&nbsp;")
+    # pprint("prod_ref = %s" % prod_ref)
+    #pprint("prod_match = %s" % matching_products[0])
+    ret_data = {
+        'product_reference': prod_ref,
+        'matching_products': matching_products
+    }
+    # ret_data_encoded = ret_data.encode('utf-8')
+    # return ret_data_encoded
+    #return ret_data.decode('utf-8')
+    return json.dumps(ret_data, encoding="utf-8")
+
+@app.route('/fetchPGraph/', methods=['GET'])
+def fetchPGraph():
+    """
+    Fetches product reference details (with similarity details) and retrieves a subset of matching
+    products referenced in tag 'similarity'
+    Data are processed with coordinates, suitable for tuttifrutti graph
+    :return:
+    """
+    pprint("INCOMING (/fetchPGraph/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+
+    code = str(request.args.get('barcode'))
+    country = str(request.args.get('country'))
+    store = str(request.args.get('store'))
+    score = str(request.args.get('score'))
+    #pprint("score %s" % score)
+    if country == 'None':
+        country = ''
+    if store == 'None':
+        store = ''
+    if score == 'None':
+        score = ''
+
+    all_data = ProductFetcher.PG_fetch_product(code, country, store, score)
+    # Log.Log.add_msg("Request received by server!")
+    # Log.Log.add_msg("Your IP-address is %s" % request.remote_addr)
+    # Log.Log.add_msg("&nbsp;")
+    # Log.Log.add_msg("search of matching products started for product %s" % code)
+    # Log.Log.add_msg("&nbsp;")
+    ret_data = {"graph": all_data}
+    return jsonify(ret_data)
 
 @app.route('/logAjax/', methods=['GET'])
 def logAjax():
@@ -81,34 +190,31 @@ def logAjax():
 
 @app.route("/hello")
 def hello():
-    pongo = MongoClient("mongodb://tuttifrutti_oric:Oric1!@mongodb-tuttifrutti.alwaysdata.net/tuttifrutti_off")
-    db = pongo["tuttifrutti_off"]
-    coll_products = db["products"]
-    print "%d products are referenced" % (coll_products.find().count())
-    strCountProducts = str(coll_products.find().count())
-    strOutput = """<h1>Product comparator</h1><br />
-    This site uses data from the <b><a href='http://www.openfoodfacts.org' title='openfoodfacts' target='_blank'>
-    Open Food Facts</a></b> database.<br />
-    <br />
-    <b>""" + strCountProducts + """</b> products are referenced.<br />
-    <br />
-    Enter a product reference to start the comparison with similar products: <input id='product_code' type='text'
-      value='3560070800384' />
-    <input type='submit' style='background-color: blue; color: white'
-    value='Go!' onclick="window.location='http://tuttifrutti.alwaysdata.net/fetch/'+
-    document.getElementById('product_code').value+''" /><br />
-    <br />
-    <div style='color: grey'>NOTE: the number of products shown is intentionally limited.<br />
-    Once you've launched the request, you may wait a few seconds<br />
-    before being able to see the resulting graph. Please be patient..!
-    """
-    return strOutput
+    pprint("INCOMING (/hello/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    return redirect("https://offmatch.blogspot.com/search/label/stats", code=302)
+
+    # data_env1 = DataEnv.DataEnv(
+    #     ["countries_tags", "categories_tags", "images", "generic_name", "product_name", "similarity"])
+    # querier = Querier.Querier("", data_env1, True)
+    # # connecting to server
+    # nb_products_in_db = querier.P_connect()
+    # querier.P_disconnect()
+    # strCountProducts = str(nb_products_in_db)
+    # strOutput = """<h1>PROSIM Engine Stats</h1><br />
+    # The <b>PROSIM engine</b> aggregates data from the <a href='http://www.openfoodfacts.org' title='openfoodfacts' target='_blank'>
+    # Open Food Facts</a> database in order to deliver matching products with similarity and scoring details (nutrition-score, nova-score, ... depending on the state of the art).<br />
+    # <br />
+    # <b>""" + strCountProducts + """</b> products are actually referenced.<br />
+    # <br />Find more details or build your own customized engine by visiting its <a href="https://offmatch.blogspot.com/" target="_blank">official blog</a>.
+    # """
+    # return strOutput
 
 
 @app.route('/fetchStores/', methods=['GET'])
 def fetch_stores():
+    pprint("INCOMING (/fetchStores/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
     stores = None
-    pprint ("request is:%r" % request)
+    # pprint ("request is:%r" % request)
     country = request.args.get('country')
     print "country is %r" % country
     # check country is registered (e.g.: "en:france")
@@ -126,25 +232,42 @@ def fetch_stores():
     return jsonify(stores)
 
 
-@app.route('/fetchone/<string:code>', methods=['GET'])
+@app.route('/fetchScoreDbs', methods=['GET'])
+def fetch_score_dbs():
+    pprint("INCOMING (/fetchStats) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    file_stats = "./static/data/db_stats.json"
+    with open(file_stats, "r") as fileHandler:
+        db_stats = json.load(fileHandler)
+
+    # get modification time
+    try:
+        mtime = os.path.getmtime(file_stats)
+    except OSError:
+        mtime = 0
+    last_modified_date = time.ctime(mtime)
+    ret_stats = {"datefile": last_modified_date, "stats": db_stats}
+    return jsonify(ret_stats)
+
+@app.route('/fetchone/<string:score>/<string:code>', methods=['GET'])
 def fetch_single(code):
-    a_product = fetch_single_product(code)
+    a_product = fetch_single_product(code, score)
     Log.Log.add_msg("product fetched is:")
     pprint (a_product.dic_props)
     return "%r" % a_product.dic_props
 
 
-@app.route('/fetch/<string:code>', methods=['GET'])
+@app.route('/fetch/<string:score>/<string:code>', methods=['GET'])
 def fetch(code):
-    all_points = fetch_product(code)
+    pprint("INCOMING (/fetch/score/code) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
+    all_points = fetch_product(code, score)
     return output_html(code, all_points)
 
 
-def fetch_single_product(code):
+def fetch_single_product(code, score):
     data_env1 = DataEnv.DataEnv(["code", "generic_name", "product_name", "countries_tags",
                                   "categories_tags", "brands_tags", "nutriments", "images"])
     gui = Gui.Gui(data_env1)
-    querier = Querier.Querier(data_env1, True)
+    querier = Querier.Querier(score, data_env1, True)
 
     # connecting to server
     querier.connect()

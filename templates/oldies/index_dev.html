@@ -3,33 +3,11 @@
 <head>
     <title>OFF-Product Comparator</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-
-
-
 </head>
 
 <body bgcolor='#e8e8e8'>
 {% extends "layout.html" %}
 {% block content %}
-
-<!-- Matomo -->
-<script type="text/javascript">
-    var _paq = _paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(["setCookieDomain", "*.tuttifrutti.alwaysdata.net"]);
-    _paq.push(["setDoNotTrack", true]);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-        var u="//analytics.alwaysdata.com/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', '143523']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-    })();
-</script>
-<!-- End Matomo Code -->
 
 <!-- Waiting Screen -->
 <div id="screenBlock">
@@ -43,9 +21,8 @@
 
 <!-- GRAPH HEADER -->
 
-<div id="banner">Open Food Facts Graph - Product comparison
-    <button class="js-toggle-left-slidebar sb_menu_btn"><img
-            src="{{ url_for('static',filename='images/ico_menu_3.png') }}" class="sb_ico_menu"/></button>
+<div id="banner">Open Food Facts Graph - Product comparison (DEV)
+    <button class="js-toggle-left-slidebar sb_menu_btn"><img src="{{ url_for('static',filename='images/ico_menu_3.png') }}" class="sb_ico_menu" /></button>
 </div>
 
 <div id="product_details"><span id="prod_ref_code">&nbsp;</span> &nbsp;&nbsp;
@@ -67,8 +44,8 @@
                                     Product page
                                 </a></div>
                                 <div id="link_json_off"><a id="url_off_json_prod"
-                                                           href='https://fr.openfoodfacts.org/api/v0/produit/3029330003533.json'
-                                                           target='_blank'>
+                                        href='https://fr.openfoodfacts.org/api/v0/produit/3029330003533.json'
+                                        target='_blank'>
                                     Product JSON
                                 </a></div>
                             </div>
@@ -99,14 +76,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Score</td>
-                                        <td>
-                                            <select id="input_score_db" title="select a score" onchange="changeScoreDb(this)">
-                                                <option></option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td>Barcode</td>
                                         <td>
                                             <div id="panel_input_code">
@@ -120,14 +89,12 @@
                                                     <img src="{{ url_for('static',filename='images/barcode2.png') }}"
                                                          style="padding-left: 65px;"
                                                          width="90px" style="margin-left: 5px"
-                                                         title="scan a product barcode (zxing)"
-                                                         onclick="scan_barcode_zxing()"/>
+                                                         title="scan a product barcode (zxing)" onclick="scan_barcode_zxing()"/>
                                                 </div>
                                             </div>
 
                                         </td>
                                     </tr>
-
                                 </table>
                             </div>
                             <div id="msg_warning_prod_ref">&nbsp;</div>
@@ -171,38 +138,24 @@
         <div class="body">
             <table>
                 <tr class="sb_item">
-                    <td><a href="https://offgraphs.blogspot.com/2018/09/how-to-use-interface.html" target="_blank"
-                           title="how to use?">
+                    <td><a href="https://offgraphs.blogspot.com/2018/09/how-to-use-interface.html" target="_blank" title="how to use?">
                         <img src="{{ url_for('static',filename='images/ico_help_1.png') }}"
                              class="sb_ico"
                              title="how to use?"/></a>
                     </td>
-                    <td class="sb_item"><a href="https://offgraphs.blogspot.com/2018/09/how-to-use-interface.html"
-                                           target="_blank" title="how to use?">how to use?</a></td>
+                    <td class="sb_item"><a href="https://offgraphs.blogspot.com/2018/09/how-to-use-interface.html" target="_blank" title="how to use?">how to use?</a></td>
                 </tr>
                 <tr class="sb_item">
-                    <td><a href="https://offgraphs.blogspot.com/2018/09/create-your-off-graph-app.html" target="_blank"
-                           title="create an App"><img src="{{ url_for('static',filename='images/ico_app_1.png') }}"
-                                                      class="sb_ico"
-                                                      title="create an App"/></a></td>
-                    <td class="sb_item"><a href="https://offgraphs.blogspot.com/2018/09/create-your-off-graph-app.html"
-                                           target="_blank" title="create an App">create an App</a></td>
+                    <td><a href="https://offgraphs.blogspot.com/2018/09/create-your-off-graph-app.html" target="_blank" title="create an App"><img src="{{ url_for('static',filename='images/ico_app_1.png') }}"
+                                                                                                                                                   class="sb_ico"
+                                                                                                                                                   title="create an App"/></a></td>
+                    <td class="sb_item"><a href="https://offgraphs.blogspot.com/2018/09/create-your-off-graph-app.html" target="_blank" title="create an App">create an App</a></td>
                 </tr>
                 <tr class="sb_item">
-                    <td><a href="https://world.openfoodfacts.org" target="_blank" title="data from OpenFoodFacts">
-                        <img src="{{ url_for('static',filename='images/ico_openfoodfacts_1.svg') }}"
-                             class="sb_ico"
-                             title="data from OpenFoodFacts"/></a></td>
-                    <td class="sb_item"><a href="https://world.openfoodfacts.org" target="_blank"
-                                           title="data from OpenFoodFacts">data from OpenFoodFacts</a></td>
-                </tr>
-                <tr class="sb_item">
-                    <td><a onclick="clearCache()" href="#" title="clear App cache">
-                        <img src="{{ url_for('static',filename='images/ico_clear_cache_1.png') }}"
-                             class="sb_ico"
-                             title="clear App cache"/></a></td>
-                    <td class="sb_item"><a onclick="clearCache()" href="#"
-                                           title="clear App cache">clear App cache</a></td>
+                    <td><a href="https://world.openfoodfacts.org" target="_blank" title="data from OpenFoodFacts"><img src="{{ url_for('static',filename='images/ico_openfoodfacts_1.svg') }}"
+                                                                                                                       class="sb_ico"
+                                                                                                                       title="data from OpenFoodFacts"/></a></td>
+                    <td class="sb_item"><a href="https://world.openfoodfacts.org" target="_blank" title="data from OpenFoodFacts">data from OpenFoodFacts</a></td>
                 </tr>
                 <tr class="sb_item">
                     <td><a href="https://world.openfoodfacts.org" target="_blank" title="DEV: use the API">
@@ -223,15 +176,13 @@
             </table>
         </div>
         <footer id="sb_bottom">
-            <table id="sb_bottom_table">
+            <table id ="sb_bottom_table">
                 <tr>
-                    <td><a href="https://twitter.com/GraphProsim" target="_blank"
-                           title="twitter off graph &amp; prosim backend-engine">
+                    <td><a href="https://twitter.com/GraphProsim" target="_blank" title="twitter off graph &amp; prosim backend-engine">
                         <img src="{{ url_for('static',filename='images/ico_twitter_1.png') }}"
                              class="sb_ico_big"
                              title="twitter off graph &amp; prosim backend-engine"/></a></td>
-                    <td><a href="https://offgraphs.blogspot.com" target="_blank"
-                           title="access to dedicated blog on blogger">
+                    <td><a href="https://offgraphs.blogspot.com" target="_blank" title="access to dedicated blog on blogger">
                         <img src="{{ url_for('static',filename='images/ico_blog_2.png') }}"
                              class="sb_ico_big"
                              title="access to dedicated blog on blogger"/></a></td>

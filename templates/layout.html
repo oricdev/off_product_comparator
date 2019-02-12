@@ -3,16 +3,25 @@
 <head>
     <title>OFF-Product Comparator</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.gif') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/scroll.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/graph_handheld.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/products_suggestion.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/product_details.css') }}" >
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/waiting_screen.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static',filename='3rd_party/slidebars_adchsm/slidebars.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/slidebars_items.css') }}">
     <!-- JS libraries -->
     <script type="text/javascript" src="{{ url_for('static',filename='3rd_party/jquery/1.8.2/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='3rd_party/d3.v3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='scripts/constants_endpoints.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='scripts/constants_stats.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='scripts/constants.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='scripts/scanner.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='scripts/utils.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='scripts/country_store.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='scripts/score_databases.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='scripts/products_suggestion.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='scripts/graph_handheld.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='scripts/server_log.js') }}"></script>
