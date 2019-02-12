@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OFF-Product Comparator</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+</head>
+<body>
+{% extends "layout_stats.html" %}
+{% block content %}
+
+<div class="title">PROSIM Databases' Statistics</div>
+
+<div class="summary">
+    <p>
+        PROSIM is the backend engine aggregating
+        <a href="https://world.openfoodfacts.org" target="_blank">OpenFoodFacts</a> data
+        to make comparisons between similar products and scoring easier (<a href="https://offmatch.blogspot.com/"
+                                                                            target="_blank"
+                                                                            title="access to PROSIM blog">more
+        details</a>).
+    </p>
+    <p>
+        Statistics on available databases are listed below and updated before midday (
+        <a href="https://offmatch.blogspot.com/2018/10/how-are-statistics-computed.html" target="_blank" title="PROSIM: how are statistics computed?">more details</a>).</p>
+    <p>Those whose name ends with <span class="emph">_next</span>
+        refer to databases whose building is still in progress; they are intended to replace their counterpart database
+        on completion and become productive (without <span class="emph">_next</span> at the end).
+    </p>
+    <p>
+        If you requested your own <span class="emph">&lt;my_db&gt;</span> database (<a
+            href="https://offmatch.blogspot.com/2018/10/how-can-i-request-new-score-database.html" target="blank">more
+        details</a>), it will first be listed as <span class="emph">&lt;my_db_next&gt;</span>. After the first
+        aggregation is completed, both
+        names will be listed below.
+    </p>
+</div>
+
+<div class="table_stats">
+    <table id="stats_table">
+        <tr><th colspan="16">D A T A B A S E S'&nbsp;&nbsp;S T A T I S T I C S<br/>
+        <div id="file_timestamp"></div>
+        </th></tr>
+        <tr>
+            <!-- status (ok, error) -->
+            <th></th>
+            <th>nickname</th>
+            <th>db</th>
+            <th>owner</th>
+            <th colspan='2'>info</th>
+            <th>max size (GB)</th>
+
+            <th>size (GB)</th>
+            <th>progression (%)</th>
+            <th># prod extracted</th>
+            <th># intersect computed</th>
+            <th>similarity (%)</th>
+            <th># prod in db</th>
+            <th># intersect in db</th>
+            <th>CI</th>
+            <th>reports</th>
+        </tr>
+
+    </table>
+</div>
+
+<div>
+    <table id="stats_labels">
+        <th colspan="2">legend</th>
+        <tr>
+            <td>nickname</td>
+            <td>name to be used client-side to query the database (<i>score</i> URL-parameter)</td>
+        </tr>
+        <tr>
+            <td>db</td>
+            <td>mongoDb name of the database</td>
+        </tr>
+        <tr>
+            <td>owner</td>
+            <td>owner of the database; typically th user having made the request through the submission of its CI template</td>
+        </tr>
+        <tr>
+            <td>info</td>
+            <td>purpose summary and description of the database</td>
+        </tr>
+        <tr>
+            <td>max size (GB)</td>
+            <td>limit set to the database (Admins)</td>
+        </tr>
+        <tr>
+            <td>size (GB)</td>
+            <td>current size of the database, including indexes</td>
+        </tr>
+        <tr>
+            <td>progression (%)</td>
+            <td>[0; 100]: progression of the completion of the database</td>
+        </tr>
+        <tr>
+            <td># prod extracted</td>
+            <td>number of products extracted which are valid candidates for computing a match later on (<a href="https://offmatch.blogspot.com/2018/10/task-13-feeders.html" target="_blank" title="feeder tasks">feeder tasks</a>)</td>
+        </tr>
+        <tr>
+            <td># intersect computed</td>
+            <td>number of intersections computed based on <i># prod extracted</i> and <i>progression</i>. Intersections below <i>similarity</i> do not appear in the final mongo database
+                (<a href="https://offmatch.blogspot.com/2018/10/task-33-intersecter.html" target="_blank" title="task intersecter">task intersecter</a>).</td>
+        </tr>
+        <tr>
+            <td>similarity (%)</td>
+            <td>minimum percentage of similarity required for an intersection-match of 2 products so that it shall appear in the final database and be counted as is.</td>
+        </tr>
+        <tr>
+            <td># prod in db</td>
+            <td>number of products in the final mongo database</td>
+        </tr>
+        <tr>
+            <td># intersect in db</td>
+            <td>number of intersections in the final database whose similarity-value is at least equals to <i>similarity</i></td>
+        </tr>
+        <tr>
+            <td>CI</td>
+            <td>view the ComputingInstance.java file used for building the database</td>
+        </tr>
+        <tr>
+            <td>reports</td>
+            <td>view the statistics reports of each instance of the database.</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}
+</body>
+</html>

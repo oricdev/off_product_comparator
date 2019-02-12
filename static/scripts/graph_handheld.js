@@ -1,14 +1,13 @@
-
-
-
 /* draw SVG graph:
  - id_attach_graph: id of html-item for attaching the graph itself
+ - db_graph is same as current_db_for_graph, but packed here together with function
  - prod_ref: object containing all required data for showing object details (score, categories, image, url)
  - prod_matching: array of all matching products objects containing all required information (score, tooltip, etc.)
  - item_display_code_of_selected_product : html item receiving the code of the selected product in the graph (ex.: div's id)
  - open_off_page: true (/false) opens in a separate tab the off page for the selected product in the graph
  */
 function draw_graph(id_attach_graph,
+                    db_graph,
                     prod_ref,
                     prod_matching,
                     item_display_code_of_selected_product,
@@ -24,7 +23,7 @@ function draw_graph(id_attach_graph,
     var nb_categs = (prod_ref.categories_tags == undefined || prod_ref.categories_tags.length == 0) ? 8 : prod_ref.categories_tags.length;
     /* Number of x-axis ticks displayed in the graph (score is then minimum 1-(nb_categs_displayed/nb_categs) ) */
     var nb_categs_displayed = Math.ceil(nb_categs / 2);
-    var nb_nutrition_grades = 5;
+    var nb_nutrition_grades = db_graph["scoreNbIntervals"];
     var x_axis_min_value = 1 - (nb_categs_displayed / nb_categs);
     var shift_left_x_values = x_axis_min_value;
 
@@ -39,20 +38,35 @@ function draw_graph(id_attach_graph,
             return "";
         });
 
+    /* Draw vertical lines for each tick */
+    /* ..generates [0..nb_categs_displayed] */
+    var rangeCategs = [...Array(nb_categs_displayed + 1).keys()
+]
+    ;
+    var dataX = [];
+    rangeCategs.forEach(function (d) {
+        if (d > 0) {
+            dataX.push(d / nb_categs_displayed);
+        }
+    });
+    var xAxisVertical = d3.svg.axis().scale(x)
+            .orient("top").ticks(nb_categs_displayed)
+            .tickValues(dataX)
+            .innerTickSize([height])
+            .outerTickSize([height])
+        ;
+
     var yAxis = d3.svg.axis().scale(y)
         .orient("left")
         .ticks(nb_nutrition_grades)
         .tickFormat(function (d) {
-            if (d == 1)
-                return "E";
-            if (d == 2)
-                return "D";
-            if (d == 3)
-                return "C";
-            if (d == 4)
-                return "B";
-            if (d == 5)
-                return "A";
+            if (d >= db_graph["scoreMinValue"] && d <= db_graph["scoreMaxValue"]) {
+                if (db_graph["bottomUp"] == true) {
+                    return db_graph["scoreIntervalsLabels"][d - 1];
+                } else {
+                    return db_graph["scoreIntervalsLabels"][db_graph["scoreNbIntervals"] - d];
+                }
+            }
             return "";
         });
 
@@ -70,42 +84,69 @@ function draw_graph(id_attach_graph,
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    /* todo: check because new added */
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + margin.top + margin.bottom + ")")
+        .call(xAxisVertical);
+
 
     // Scale the range of the data
     x.domain([x_axis_min_value, 1]);
     y.domain([0, nb_nutrition_grades]);
 
-    var data_rect = [{'v': 1, 'color': 'rgb(230,62,17)'}, {'v': 2, 'color': 'rgb(238,129,0)'}, {
-        'v': 3,
-        'color': 'rgb(254,203,2)'
-    }, {'v': 4, 'color': 'rgb(133,187,47)'}, {'v': 5, 'color': 'rgb(3,129,65)'}];
+    /*var data_rect = [{'v': 1, 'color': 'rgb(230,62,17)'}, {'v': 2, 'color': 'rgb(238,129,0)'}, {
+     'v': 3,
+     'color': 'rgb(254,203,2)'
+     }, {'v': 4, 'color': 'rgb(133,187,47)'}, {'v': 5, 'color': 'rgb(3,129,65)'}];*/
+
+    /* Draw coloured stripes from bottom to top (bottom-up direction) */
+    var data_rect_2 = [];
+    var rangeInterval = (db_graph["scoreMaxValue"] - db_graph["scoreMinValue"] + 1);
+    var step_for_stripe = rangeInterval / db_graph["scoreNbIntervals"];
+    var indx_array = 0;
+    for (var i = db_graph["scoreMinValue"]; i <= db_graph["scoreMaxValue"]; i += step_for_stripe) {
+        // Tick number: when starting, equals 0 + stripe's step
+        numTick = (i - db_graph["scoreMinValue"]) + step_for_stripe;
+        data_rect_2.push({'v': i, 'color': db_graph["scoreIntervalsStripeColour"][indx_array]});
+        indx_array++;
+    }
+
     svg.selectAll("rect")
-        .data(data_rect)
+        .data(data_rect_2)
         .enter()
         .append("rect")
         .attr("width", width)
-        .attr("height", height / 5)
+        .attr("height", height / db_graph["scoreNbIntervals"])
         .attr("y", function (d) {
-            return (5 - d.v) * height / 5
+            if (db_graph["bottomUp"] == true) {
+                return (rangeInterval - d.v) * height / rangeInterval;
+            } else {
+                return (d.v - step_for_stripe) * height / rangeInterval;
+            }
         })
         .attr("fill", function (d) {
             return d.color
-        })
-        .attr("fill-opacity", .7);
+        });
     // *****
 
     // Add the scatterplot
     // .. for the product reference
-    var data_prod_ref = [{'nutrition_grade': 1}];
+    var data_prod_ref = [{'score': 1}];
     if (prod_ref.length != 0)
-        data_prod_ref = [{'nutrition_grade': prod_ref["y_val_real"]}];
+        data_prod_ref = [{'score': prod_ref["score"]}];
     svg.selectAll("ellipse")
         .data(data_prod_ref)
         .enter().append("ellipse")
         .attr("cx", width * (1 - (1 / nb_categs_displayed) / 2))
         .attr("cy", function (d) {
-            return (height * (1 - (d.nutrition_grade / nb_nutrition_grades)) + (height / nb_nutrition_grades * 0.5));
+            if (db_graph["bottomUp"] == true) {
+                return (height * (1 - (d.score / nb_nutrition_grades)) + (height / nb_nutrition_grades * 0.5));
+            } else {
+                return (height * ((d.score - 1) / nb_nutrition_grades) + (height / nb_nutrition_grades * 0.5));
+            }
         })
         .attr("rx", width / nb_categs_displayed * 0.5)
         .attr("ry", (height / nb_nutrition_grades) * 0.5)
@@ -113,14 +154,24 @@ function draw_graph(id_attach_graph,
         .attr("fill-opacity", 0.75);
 
     /* Filtering of matching products to suggest, and extraction of minimum abscisse in order to determine the width of the square box for suggestions */
-    data_prod_ref[0].y_val_real = data_prod_ref[0].nutrition_grade;
-    var prods_filtered_for_graph = filter_suggestions(data_prod_ref[0], prod_matching);
+    //data_prod_ref[0].y_val_real = data_prod_ref[0].score;
+    var prods_filtered_for_graph = filter_suggestions(data_prod_ref[0], prod_matching, db_graph);
     prods_filtered_for_graph.sort(function_sort_min_abscisse);
 
-    var square_of_suggestions = [{
-        "width": prods_filtered_for_graph.length==0 ? (1/nb_categs_displayed*2) : (1 - prods_filtered_for_graph[0].x)*(nb_categs / nb_categs_displayed),
-        "height": data_prod_ref[0].nutrition_grade == 5 ? 1 : (5 - data_prod_ref[0].nutrition_grade)
-    }];
+    var square_of_suggestions = undefined;
+    if (db_graph["bottomUp"] == true) {
+        square_of_suggestions = [{
+            "width": prods_filtered_for_graph.length == 0 ? (1 / nb_categs_displayed) : (1 - prods_filtered_for_graph[0].x) * (nb_categs / nb_categs_displayed),
+            /* Height of the suggestion square is the range of intervals minus the difference between the score of product ref. and the min. value */
+            "height": data_prod_ref[0].score == db_graph["scoreMaxValue"] ? 1 : (rangeInterval - (data_prod_ref[0].score - (db_graph["scoreMinValue"] - 1)))
+        }];
+    } else {
+        // width unchanged, but height is reversed
+        square_of_suggestions = [{
+            "width": prods_filtered_for_graph.length == 0 ? (1 / nb_categs_displayed) : (1 - prods_filtered_for_graph[0].x) * (nb_categs / nb_categs_displayed),
+            "height": data_prod_ref[0].score == db_graph["scoreMinValue"] ? 1 : (data_prod_ref[0].score - 1)
+        }];
+    }
     svg.selectAll("polyline")
         .data(square_of_suggestions)
         .enter().append("polyline")
@@ -128,7 +179,7 @@ function draw_graph(id_attach_graph,
         .style("fill", "none")     // remove any fill colour
         .attr("points", function (d) {
             w = width * d.width + CIRCLE_RADIUS_SELECTED;
-            h = d.height * (height / 5);
+            h = d.height * (height / rangeInterval);
             rect_points = width + "," + 0 + ", " + width + "," + h + ", " + (width - w) + "," + h + ", " + (width - w) + "," + 0 + ", " + width + "," + 0;
             return rect_points
         })
@@ -150,7 +201,11 @@ function draw_graph(id_attach_graph,
             return (d.x - shift_left_x_values) * nb_categs / nb_categs_displayed * width;
         })
         .attr("cy", function (d) {
-            return height * (1 - d.y / nb_nutrition_grades);
+            if (db_graph["bottomUp"] == true) {
+                return height * (1 - d.y / nb_nutrition_grades);
+            } else {
+                return height * (d.y / nb_nutrition_grades);
+            }
         })
         .on("mouseover", function (d) {
             div.transition()
@@ -203,7 +258,7 @@ function draw_graph(id_attach_graph,
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .style("font-size", "inherit")
-        .text("Nutrition score");
+        .text(db_graph["scoreLabelYAxis"]);
 
     $(id_attach_graph).empty();
     $("svg").detach().appendTo(id_attach_graph);
@@ -230,8 +285,16 @@ function display_product_ref_details(prod_ref,
     no_nutriments = prod_ref["no_nutriments"];
     categories = prod_ref["categories_tags"].join("<br />");
     url_off = prod_ref["url_product"];
+    /* replace 'world' with country code if available */
+    country_code = undefined;
+    if (user_country != undefined) {
+        country_code = user_country[0].en_code;
+    }
+    if (country_code != undefined) {
+        url_off = url_off.replace("//" + URL_OFF_DEFAULT_COUNTRY.toLowerCase() + ".", "//" + country_code.toLowerCase().trim() + ".");
+    }
     url_json = prod_ref["url_json"];
-    class_for_grade = "grade_" + prod_ref["y_val_real"];
+    style_for_border_colour = "grade_" + prod_ref["score"];
     $(id_code).empty();
     $(id_code).append(code);
     $(id_input_code).empty();
@@ -240,7 +303,7 @@ function display_product_ref_details(prod_ref,
     $(id_name).append(name);
     $(id_img).attr("src", image);
     $(id_img).attr("height", "" + ($(window).innerHeight() / 7) + "px");
-    $(id_img).attr("class", class_for_grade);
+    $(id_img).attr("class", style_for_border_colour);
     $(ID_IMG_OFF).attr("height", "" + ($(window).innerHeight() / 7 / 3) + "px");
     $(ID_IMG_OFF).attr("max-height", "28px");
     $(ID_IMG_JSON).attr("height", "" + ($(window).innerHeight() / 7 / 3) + "px");
@@ -267,10 +330,11 @@ function draw_page(prod_ref, prod_matching) {
         ID_PRODUCT_JSON,
         ID_WARNING);
     draw_graph(ID_GRAPH,
+        current_db_for_graph,
         prod_ref,
         prod_matching,
         ID_INPUT_PRODUCT_CODE,
         OPEN_OFF_PAGE_FOR_SELECTED_PRODUCT);
-    make_suggestions(prod_ref, prod_matching);
+    make_suggestions(prod_ref, prod_matching, current_db_for_graph);
 }
 
