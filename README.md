@@ -1,7 +1,7 @@
 <h1>OpenFoodFacts Product Comparator</h1>
 
 <p>Also known as OFF-Graph, is makes it possible to type in (or <a href="https://offgraphs.blogspot.com/2018/09/create-your-off-graph-app.html" target="_blank">scan</a>) the barcode of a product and to get almost instantly within a user-friendly graph 
-one of its scores (<a href="https://tuttifrutti.alwaysdata.net" target="_blank"></a>Nutrition score, <a href="https://tuttifrutti.alwaysdata.net" target="_blank"></a>Nova Classification score), or even your <a href="https://offmatch.blogspot.com/2018/10/how-can-i-request-new-score-database.html" target="_blank">own score</a> if you wish to build it!
+one of its scores (<a href="https://world.openfoodfacts.org/nutriscore" target="_blank">Nutrition score</a>, <a href="https://www.bmj.com/content/bmj/360/bmj.k322.full.pdf" target="_blank">Nova Classification</a> score), or even your <a href="https://offmatch.blogspot.com/2018/10/how-can-i-request-new-score-database.html" target="_blank">own score</a> if you wish to build it!
 </p>
 <p>
 Language of the application is <b>English</b>.
