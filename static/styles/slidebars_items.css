@@ -50,6 +50,11 @@ http://jsfiddle.net/meyertee/AH3pE/
     padding-bottom: 2ex;
 }
 
+.sb_ico_middle {
+    width: 64px;
+    bottom: 9px;
+}
+
 .sb_ico_big {
     width: 96px;
     bottom: 15px;
@@ -57,7 +62,7 @@ http://jsfiddle.net/meyertee/AH3pE/
 
 #sb_bottom {
     background-color: #0099ff;
-    height: 100px;
+    height: 120px;
 }
 
 #sb_bottom_table {
@@ -112,7 +117,7 @@ header {
 }
 
 footer {
-    padding: 1em;
+    padding: 1ex 1em 1em 1em;
     -moz-flex-shrink: 0;
     -webkit-flex-shrink: 0;
     -ms-flex-shrink: 0;

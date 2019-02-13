@@ -5,8 +5,6 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
 
-
-
 </head>
 
 <body bgcolor='#e8e8e8'>
@@ -21,12 +19,16 @@
     _paq.push(["setDoNotTrack", true]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
-    (function() {
-        var u="//analytics.alwaysdata.com/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
+    (function () {
+        var u = "//analytics.alwaysdata.com/";
+        _paq.push(['setTrackerUrl', u + 'piwik.php']);
         _paq.push(['setSiteId', '143523']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript';
+        g.async = true;
+        g.defer = true;
+        g.src = u + 'piwik.js';
+        s.parentNode.insertBefore(g, s);
     })();
 </script>
 <!-- End Matomo Code -->
@@ -101,7 +103,8 @@
                                     <tr>
                                         <td>Score</td>
                                         <td>
-                                            <select id="input_score_db" title="select a score" onchange="changeScoreDb(this)">
+                                            <select id="input_score_db" title="select a score"
+                                                    onchange="changeScoreDb(this)">
                                                 <option></option>
                                             </select>
                                         </td>
@@ -121,7 +124,12 @@
                                                          style="padding-left: 65px;"
                                                          width="90px" style="margin-left: 5px"
                                                          title="scan a product barcode (zxing)"
-                                                         onclick="scan_barcode_zxing()"/>
+                                                         onclick="userAgent = navigator.userAgent.toLowerCase();
+                                                            if (userAgent.search('android') >= 0) {
+                                                                scan_barcode_zxing();
+                                                            } else {
+                                                                 alert('The barcode scanner is so far only available on Android smart-phones.');
+                                                            }"/>
                                                 </div>
                                             </div>
 
@@ -228,13 +236,25 @@
                     <td><a href="https://twitter.com/GraphProsim" target="_blank"
                            title="twitter off graph &amp; prosim backend-engine">
                         <img src="{{ url_for('static',filename='images/ico_twitter_1.png') }}"
-                             class="sb_ico_big"
+                             class="sb_ico_middle"
                              title="twitter off graph &amp; prosim backend-engine"/></a></td>
                     <td><a href="https://offgraphs.blogspot.com" target="_blank"
                            title="access to dedicated blog on blogger">
                         <img src="{{ url_for('static',filename='images/ico_blog_2.png') }}"
-                             class="sb_ico_big"
+                             class="sb_ico_middle"
                              title="access to dedicated blog on blogger"/></a></td>
+                </tr>
+                <tr>
+                    <td><a href="https://github.com/oricdev/off_product_comparator" target="_blank"
+                           title="jump to source code">
+                        <img src="{{ url_for('static',filename='images/ico_coding_64px.png') }}"
+                             class="sb_ico_middle"
+                             title="jump to source code"/></a></td>
+                    <td><a href="https://openfoodfacts.slack.com/messages/CAWV7S1T7/details/" target="_blank"
+                           title="jump to dedicated OpenFoodFacts Slack channel">
+                        <img src="{{ url_for('static',filename='images/icon_slack.png') }}"
+                             class="sb_ico_middle"
+                             title="jump to dedicated OpenFoodFacts Slack channel"/></a></td>
                 </tr>
             </table>
         </footer>
