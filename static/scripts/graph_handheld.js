@@ -1,4 +1,11 @@
-/* draw SVG graph:
+/*
+ * OFF-Graph / OpenFoodFacts Product Comparator
+ *
+ * Contact: Olivier Richard (oric_dev@iznogoud.neomailbox.ch)
+ * License: GNU Affero General Public License v3.0
+ * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
+ */
+ /* draw SVG graph:
  - id_attach_graph: id of html-item for attaching the graph itself
  - db_graph is same as current_db_for_graph, but packed here together with function
  - prod_ref: object containing all required data for showing object details (score, categories, image, url)

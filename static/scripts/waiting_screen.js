@@ -1,3 +1,10 @@
+/*
+ * OFF-Graph / OpenFoodFacts Product Comparator
+ *
+ * Contact: Olivier Richard (oric_dev@iznogoud.neomailbox.ch)
+ * License: GNU Affero General Public License v3.0
+ * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
+ */
 /* got from https://stackoverflow.com/questions/9152416/javascript-how-to-block-the-whole-screen-while-waiting-for-ajax-response */
 
 function block_screen(msg) {

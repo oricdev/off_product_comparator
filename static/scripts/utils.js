@@ -1,5 +1,9 @@
-/**
- * Created by Olivier Richard (oric.dev@iznogoud.neomailbox.ch) on 16/05/18.
+/*
+ * OFF-Graph / OpenFoodFacts Product Comparator
+ *
+ * Contact: Olivier Richard (oric_dev@iznogoud.neomailbox.ch)
+ * License: GNU Affero General Public License v3.0
+ * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
  */
 
 // sort function for the countries
