@@ -24,7 +24,7 @@ function getCachedCountries() {
         /* fetch countries from json file (made synchronous this way with $.ajax instead of $.getJSON
         which is only asynchronous!) */
         $.ajax({
-            url: FILE_COUNTRIES,
+            url: $SCRIPT_ROOT + FILE_COUNTRIES,
             dataType: 'json',
             async: false,
             success: function (json) {

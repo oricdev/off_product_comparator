@@ -15,6 +15,12 @@ import urllib
 from threading import Thread
 from flask import Flask, session, redirect
 from flask import copy_current_request_context
+# flask-cors makes it possible to allow server-side Ajax requests from any domain:
+#  useful if you want to let users access your API using a local Javascript browser.
+#  However use it with care and knowing what you do!
+# If you don't use import and configure CORS, your local JS files will catch a 'Cross-Origin Request' failure.
+# More details here: https://flask-cors.readthedocs.io/en/latest/
+from flask_cors import CORS
 # from Flask_Session import Session
 from flask import jsonify, render_template, request
 from pymongo import MongoClient
@@ -30,6 +36,8 @@ from module import Log
 from pprint import pprint
 
 app = Flask(__name__)
+CORS(app)
+
 # enabling session for storing the logs;
 # read https://pythonhosted.org/Flask-Session/
 app.secret_key = os.urandom(24)
