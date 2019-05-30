@@ -31,14 +31,14 @@ function init() {
     draw_graph(ID_GRAPH, current_db_for_graph, [], [], ID_INPUT_PRODUCT_CODE, OPEN_OFF_PAGE_FOR_SELECTED_PRODUCT);
     cleanup_suggestions();
     $(function () {
-        $("#submitBtn").click(server_log);
+        $("#submitBtn").click(go_fetch);
     });
 
     // Insert barcode from url if available, otherwise default product barcode
     url_barcode = getParameterByName(URL_PARAM_BARCODE, window.location.href);
     if (url_barcode != undefined) {
         $(ID_INPUT_PRODUCT_CODE).val(url_barcode);
-        server_log();
+        go_fetch();
     } else {
         $(ID_INPUT_PRODUCT_CODE).val(PRODUCT_CODE_DEFAULT);
     }
@@ -123,4 +123,35 @@ function fillHtmlElementWithDatabases(score_databases) {
         $(ID_INPUT_SCORE_DB).empty();
         $(ID_INPUT_SCORE_DB).append($("<option></option>").val('').text(''));
     }
+}
+
+function go_fetch() {
+    // clear some staff
+    $(ID_INPUT_PRODUCT_CODE).css("background-color", "white");
+    $(ID_WARNING).empty();
+
+    block_screen(MSG_WAITING_SCR_MATCH_REQUEST);
+    //url_score = getParameterByName(URL_PARAM_SCORE, window.location.href);
+    $.ajax({
+        type: "GET",
+        /* url: $SCRIPT_ROOT + "/fetchAjax/",*/
+        url: $SCRIPT_ROOT + "/fetchPGraph/",
+        contentType: "application/json; charset=utf-8",
+        data: {barcode: $(ID_INPUT_PRODUCT_CODE).val(),
+            country: $(ID_INPUT_COUNTRY+" option:selected")[0].value,
+            store: $(ID_INPUT_STORE+" option:selected")[0].value,
+            score: $(ID_INPUT_SCORE_DB+" option:selected")[0].value},
+        success: function (data) {
+            unblock_screen();
+            try {
+                var product_ref = data.graph[0];
+                var products_matching = data.graph[1];
+                draw_page(product_ref, products_matching);
+            } catch (e) {
+                // possibly no data retrieved (product may have been excluded from search due to a lack of information (nutriments, etc.)
+                $(ID_WARNING).empty();
+                $(ID_WARNING).append(MSG_NO_DATA_RETRIEVED);
+            }
+        }
+    });
 }
