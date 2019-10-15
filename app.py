@@ -85,15 +85,14 @@ def fetchP():
     Raw data, nt intended for tuttifrutti graph
     :return:
     """
-    pprint("INCOMING (/fetchP/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
-    #pprint("[/fetchP/] request is:%r" % request)
-
     code = str(request.args.get('barcode'))
     score = str(request.args.get('score'))
     #country = str(request.args.get('country'))
     #store = str(request.args.get('store'))
     if score == 'None':
         score = ''
+
+    pprint("INCOMING (//fetchP//score=%s/code=%s) %s [%s]" % (score, code, request.remote_addr, datetime.datetime.now()))
 
     product = ProductFetcher.P_fetch_product_details(code, score)
     #ret_data = {"value": product}
@@ -108,9 +107,6 @@ def fetchPMatch():
      Raw data, nt intended for tuttifrutti graph
     :return:
     """
-    pprint("INCOMING (/fetchPMatch/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
-    #pprint("[/fetchPMatch/] request is:%r" % request)
-
     code = str(request.args.get('barcode'))
     country = str(request.args.get('country'))
     store = str(request.args.get('store'))
@@ -121,6 +117,8 @@ def fetchPMatch():
         store = ''
     if score == 'None':
         score = ''
+
+    pprint("INCOMING (//fetchPMatch//country=%s/store=%s/score=%s/code=%s) %s [%s]" % (country, store, score, code, request.remote_addr, datetime.datetime.now()))
 
     (prod_ref, matching_products) = ProductFetcher.PM_fetch_product(code, country, store, score)
     # Log.Log.add_msg("Request received by server!")
@@ -148,8 +146,6 @@ def fetchPGraph():
     Data are processed with coordinates, suitable for tuttifrutti graph
     :return:
     """
-    pprint("INCOMING (/fetchPGraph/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
-
     code = str(request.args.get('barcode'))
     country = str(request.args.get('country'))
     store = str(request.args.get('store'))
@@ -161,6 +157,8 @@ def fetchPGraph():
         store = ''
     if score == 'None':
         score = ''
+
+    pprint("INCOMING (//fetchPGraph//country=%s/store=%s/score=%s/code=%s) %s [%s]" % (country, store, score, code, request.remote_addr, datetime.datetime.now()))
 
     all_data = ProductFetcher.PG_fetch_product(code, country, store, score)
     # Log.Log.add_msg("Request received by server!")
@@ -174,11 +172,10 @@ def fetchPGraph():
 
 @app.route('/fetchStores/', methods=['GET'])
 def fetch_stores():
-    pprint("INCOMING (/fetchStores/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
     stores = None
     # pprint ("request is:%r" % request)
     country = request.args.get('country')
-    print "country is %r" % country
+    pprint("INCOMING (//fetchStores//country=%s) %s [%s]" % (country, request.remote_addr, datetime.datetime.now()))
     # check country is registered (e.g.: "en:france")
     if country in data_countries:
         # check if local file exists
