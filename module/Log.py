@@ -6,6 +6,8 @@
  * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
 """
 # coding=utf-8
+from __future__ import absolute_import
+from __future__ import print_function
 from flask import Flask, session
 from array import array
 from pprint import pprint
@@ -18,7 +20,7 @@ class Log(object):
 
     @staticmethod
     def __init__():
-        print "init log"
+        print("init log")
         # todo: global class? voir ci-dessous
         # https://stackoverflow.com/questions/16511321/python-global-object-variable
         global toto
@@ -32,7 +34,7 @@ class Log(object):
 
     @staticmethod
     def clear():
-        print "clearing log"
+        print("clearing log")
         Log.ptr = 0
         session['logs'] = []
 
@@ -40,7 +42,7 @@ class Log(object):
     def initialize(init_with_list):
         # session['logs'] = init_with_list
         Log.ptr = len(init_with_list)
-        print "initialized back.. Log.ptr = %r " % str(Log.ptr)
+        print("initialized back.. Log.ptr = %r " % str(Log.ptr))
 
     @staticmethod
     def add_msg(message):

@@ -7,12 +7,15 @@
 """
 # coding=utf-8
 from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
 from collections import Counter
 from pprint import pprint
 import numpy
 
 from module import PointRepartition
 from module import Product
+from six.moves import zip
 
 
 class Graph:
@@ -163,7 +166,7 @@ class Graph:
             #     #                 (products_ignored, products_ignored_codes))
             #     Log.Log.add_msg("%i additional products have been excluded due to a lack of information" %
             #                     (products_ignored))
-        except Exception, e:
+        except Exception as e:
             self.data_set_others = []
             # Log.Log.add_msg("&nbsp;")
             # Log.Log.add_msg("sorry, the process has been aborted!")
@@ -179,7 +182,7 @@ class Graph:
         :return:
         """
         if len(self.data_set_ref) == 0:
-            print "No data retrieved for the code you have entered!"
+            print("No data retrieved for the code you have entered!")
             # Log.Log.add_msg('')
             # Log.Log.add_msg('No data retrieved for the code you have entered!')
         else:

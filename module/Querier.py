@@ -7,10 +7,13 @@
 """
 # coding=utf-8
 from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
 from pymongo import MongoClient
 from module import Product, DataEnv
 from pprint import pprint
 import json
+from six.moves import range
 
 
 class Querier:
@@ -60,7 +63,7 @@ class Querier:
             self.db_name = "tuttifrutti_nutriscore"
             self.db_object = None
 
-        print "Database being used is: %r" % self.db_name
+        print("Database being used is: %r" % self.db_name)
 
         self.coll_products = None
         # maximum number of products being retrieved for a single category
@@ -118,7 +121,7 @@ class Querier:
             prop: val
         }, fields_projection)
 
-        print "nb of products found = %s" % (products_json.count())
+        print("nb of products found = %s" % (products_json.count()))
         if products_json.count() > 0:
             return products_json
         else:
@@ -163,7 +166,7 @@ class Querier:
             products_json = self.coll_products.find({
                 "code": {"$in": codes_matching}}, fields_projection)
 
-        print "nb of products found = %s" % (products_json.count())
+        print("nb of products found = %s" % (products_json.count()))
         prod_ref_grade = prod_ref.score
 
         # Prepare limiting number of items retrieved for performance-prupose
@@ -265,7 +268,7 @@ class Querier:
             products_json = self.coll_products.find({
                 "code": {"$in": codes_matching}}, fields_projection)
 
-        print "nb of products found = %s" % (products_json.count())
+        print("nb of products found = %s" % (products_json.count()))
         if products_json.count() > 0:
             for product_json in products_json:
                 products_fetched.append(product_json)

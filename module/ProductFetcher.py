@@ -6,6 +6,7 @@
  * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
 """
 # coding=utf-8
+from __future__ import absolute_import
 import os
 import time
 import json
