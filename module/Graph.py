@@ -86,7 +86,7 @@ class Graph:
                          "score_proximity": self.product_ref.score_proximity,
                          "score_nutrition": self.product_ref.score_nutrition,
                          "x_val_real": self.product_ref.score_proximity,
-                         #"y_val_real": self.product_ref.score,
+                         # "y_val_real": self.product_ref.score,
                          "score": self.product_ref.score
                          # ,
                          # "x_val_graph": self.product_ref.score_proximity,
@@ -114,7 +114,7 @@ class Graph:
                 # product = product.encode('utf-8')
                 assert isinstance(product, Product.Product)
                 # score are already computed in the Prosim-db; needs to be reactivated only if standard OFF-db is used!
-                #product.compute_scores(self.product_ref)
+                # product.compute_scores(self.product_ref)
 
                 if not product.excludeFromGraph and not product.excludeIntersectTooLow:
                     name = self.get_product_name(product.dic_props)
@@ -137,7 +137,8 @@ class Graph:
                                  }
                     if u'images' in product.dic_props:
                         if len(product.dic_props["images"]) > 0:
-                            mini_prod["images"] = product.dic_props["images"]
+                            mini_prod["images"] = self.get_url_image(product.dic_props)
+                            # mini_prod["images"] = next(iter(product.dic_props["images"]["selected"]["front"].values()))
 
                     # if u"image_small_url" in product.dic_props:
                     #     mini_prod["images"] = product.dic_props["image_small_url"]
@@ -147,7 +148,7 @@ class Graph:
                     #     mini_prod["images"] = 'https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-fr-178x150.png'
                     mini_prod["score_proximity"] = product.score_proximity
                     mini_prod["score_nutrition"] = product.score_nutrition
-                    mini_prod["x_val_real"] = product.score_proximity/100;
+                    mini_prod["x_val_real"] = product.score_proximity / 100;
                     mini_prod["score"] = product.score
                     self.xaxis_others_real.append(mini_prod["x_val_real"])
                     self.yaxis_others_real.append(mini_prod["score"])
@@ -191,7 +192,7 @@ class Graph:
             #     Log.Log.add_msg("for all %i matching products:" % len(self.data_set_others))
             #     Log.Log.add_msg("&nbsp;&nbsp;&nbsp;&nbsp;computing COORDINATES")
 
-                # todo: ugly code: to be deeply reviewed
+            # todo: ugly code: to be deeply reviewed
             # prepare for product reference
             nb_categs_ref = len(self.product_ref.dic_props["categories_tags"])
             self.xaxis_prod_ref_real.append(nb_categs_ref * self.data_set_ref[0]["x_val_real"])
@@ -225,7 +226,7 @@ class Graph:
                 x_coord = (x - (
                         1 / (2 * nb_categs_ref) * (1 - x0)))
                 y_coord = y - (
-                    0.5 * (1 - y0))
+                        0.5 * (1 - y0))
                 # print "computed for display = %d, %d" % (x_dspl, y_dspl)
 
                 self.xaxis_others_distributed.append(x_coord)
@@ -236,9 +237,9 @@ class Graph:
                 #     print "stop"
                 url_prod = "https://world.openfoodfacts.org/product/%s" % mini_prod["code"]
                 url_prod = url_prod.encode('utf-8')
-                url_img = self.get_url_image(mini_prod)
+                url_img = mini_prod["images"]
                 categs = self.get_categories_html(self.data_set_ref[0]["categories_tags"], mini_prod["categories_tags"])
-                #score_proximity = str(int(mini_prod["score_proximity"]*100))
+                # score_proximity = str(int(mini_prod["score_proximity"]*100))
 
                 # print "URL IMG:"
                 # print url_img
@@ -291,7 +292,6 @@ class Graph:
             return self.data_set_ref[0], self.d3_json
             # return self.d3_json
 
-
     def get_product_name(self, props):
         # Consider the smallest product or generic name which is not empty for describing the product
         generic_name = ''
@@ -326,10 +326,10 @@ class Graph:
         try:
             for lc in prod["languages_codes"]:
                 # print "language is %s" % lc
-                lc_front = 'front_' + lc
+                lc_front = lc
                 if 'images' in prod:
-                    if lc_front in prod['images']:
-                        if len(prod['images'][lc_front]) > 0:
+                    if lc_front in prod['images']['selected']['front']:
+                        if len(prod['images']['selected']['front'][lc_front]) > 0:
                             if len(language_to_use_for_pic) == 0:
                                 # print "the above-one is top!"
                                 language_to_use_for_pic = lc_front
@@ -342,21 +342,21 @@ class Graph:
             # print front_lbl
 
             if 'images' in prod:
-                if len(prod["code"]) >= 13:
-                    url_img = "https://static.openfoodfacts.org/images/products/" + prod["code"][0:3] + "/" \
-                              + prod["code"][3:6] \
-                              + "/" + prod["code"][6:9] + "/" + prod["code"][9:] \
-                              + "/" + front_lbl + "." \
-                              + str(prod['images'][front_lbl]["rev"]) \
-                              + ".400.jpg"
-                else:
-                    url_img = "https://static.openfoodfacts.org/images/products/" + prod["code"] \
-                              + "/" + front_lbl + "." + str(prod['images'][front_lbl]["rev"]) + ".400.jpg"
+                code_product = prod["code"]
+                if len(code_product) < 13:
+                    code_product = prod["code"].zfill(13)
+
+                url_img = "https://static.openfoodfacts.org/images/products/" + code_product[0:3] + "/" \
+                          + code_product[3:6] \
+                          + "/" + code_product[6:9] + "/" + code_product[9:] \
+                          + "/" + "front_" + front_lbl + "." \
+                          + str(int(prod['images']['selected']['front'][front_lbl]["rev"])) \
+                          + ".400.jpg"
             else:
                 url_img = prod["image_fake_off"]
 
         except Exception:
-            url_img = prod["image_fake_off"]
+            url_img = "https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-fr-178x150.png"
 
         return url_img
 

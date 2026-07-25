@@ -23,7 +23,7 @@ var GRAPH_HEIGHT = $(window).innerHeight() * 40 / 100;
 var OPEN_OFF_PAGE_FOR_SELECTED_PRODUCT = false;
 var TIME_SLOT = 2000;
 // var PRODUCT_CODE_DEFAULT = '4104420017849';
-var PRODUCT_CODE_DEFAULT = '0059749894456';
+var PRODUCT_CODE_DEFAULT = '6111246721261';
 var OFF_BACKGROUND_COLOR = "#09f";
 // fake score for product reference which means no nutriments data were available
 var NO_NUTRITION_SCORE_FOR_PRODUCT_REF = -99;

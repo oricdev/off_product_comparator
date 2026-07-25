@@ -168,7 +168,18 @@ def fetchPGraph():
     # Log.Log.add_msg("search of matching products started for product %s" % code)
     # Log.Log.add_msg("&nbsp;")
     ret_data = {"graph": all_data}
-    return jsonify(ret_data)
+
+    # Décoder les champs bytes en str sinon ça plante en Python 3
+    if ret_data.get("graph") != {}:
+        for item in ret_data["graph"][1]:
+            if isinstance(item.get("content"), bytes):
+                item["content"] = item["content"].decode("utf-8")
+            if isinstance(item.get("url"), bytes):
+                item["url"] = item["url"].decode("utf-8")
+
+    # Puis sérialiser
+    return json.dumps(ret_data)
+    #return jsonify(ret_data)
 
 
 @app.route('/fetchStores/', methods=['GET'])

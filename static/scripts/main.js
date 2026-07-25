@@ -144,8 +144,9 @@ function go_fetch() {
         success: function (data) {
             unblock_screen();
             try {
-                var product_ref = data.graph[0];
-                var products_matching = data.graph[1];
+                var parsedData = JSON.parse(data);
+                var product_ref = parsedData.graph[0];
+                var products_matching = parsedData.graph[1];
                 draw_page(product_ref, products_matching);
             } catch (e) {
                 // possibly no data retrieved (product may have been excluded from search due to a lack of information (nutriments, etc.)

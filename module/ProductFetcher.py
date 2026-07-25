@@ -58,7 +58,7 @@ def PG_fetch_product(code, country, store, score):
     if type(products) is dict:
         if len(products) == 0:
             return {}
-    elif products.count() == 0:
+    elif len(products) == 0:
             return {}
 
     myProduct = Product.Product(products[0])
