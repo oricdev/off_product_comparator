@@ -7,11 +7,12 @@
 """
 
 # coding=utf-8
+from __future__ import absolute_import
 import os
 import datetime
 import time
 import json
-import urllib
+import six.moves.urllib.request, six.moves.urllib.parse, six.moves.urllib.error
 from threading import Thread
 from flask import Flask, session, redirect
 from flask import copy_current_request_context
@@ -167,7 +168,18 @@ def fetchPGraph():
     # Log.Log.add_msg("search of matching products started for product %s" % code)
     # Log.Log.add_msg("&nbsp;")
     ret_data = {"graph": all_data}
-    return jsonify(ret_data)
+
+    # Décoder les champs bytes en str sinon ça plante en Python 3
+    if ret_data.get("graph") != {}:
+        for item in ret_data["graph"][1]:
+            if isinstance(item.get("content"), bytes):
+                item["content"] = item["content"].decode("utf-8")
+            if isinstance(item.get("url"), bytes):
+                item["url"] = item["url"].decode("utf-8")
+
+    # Puis sérialiser
+    return json.dumps(ret_data)
+    #return jsonify(ret_data)
 
 
 @app.route('/fetchStores/', methods=['GET'])
@@ -183,7 +195,7 @@ def fetch_stores():
         if not os.path.exists(file_stores):
             # file does not exist locally => download it
             url_list_stores_for_country = "https://world.openfoodfacts.org/country/%s/stores.json" % country[3:]
-            urllib.urlretrieve(url_list_stores_for_country, file_stores)
+            six.moves.urllib.request.urlretrieve(url_list_stores_for_country, file_stores)
 
         with open(file_stores, "r") as fileHandler:
             stores = json.load(fileHandler)
@@ -207,3 +219,5 @@ def fetch_score_dbs():
     ret_stats = {"datefile": last_modified_date, "stats": db_stats}
     return jsonify(ret_stats)
 
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)

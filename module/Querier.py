@@ -7,10 +7,13 @@
 """
 # coding=utf-8
 from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
 from pymongo import MongoClient
 from module import Product, DataEnv
 from pprint import pprint
 import json
+from six.moves import range
 
 
 class Querier:
@@ -60,7 +63,7 @@ class Querier:
             self.db_name = "tuttifrutti_nutriscore"
             self.db_object = None
 
-        print "Database being used is: %r" % self.db_name
+        print("Database being used is: %r" % self.db_name)
 
         self.coll_products = None
         # maximum number of products being retrieved for a single category
@@ -74,12 +77,14 @@ class Querier:
         # todo: review since hard-coded!
         # pprint("connecting to OFF MATCH database")
         self.pongo = MongoClient(
-            "mongodb://tuttifrutti_reader:reader@mongodb-tuttifrutti.alwaysdata.net/%s" % self.db_name)
+        #    "mongodb://tuttifrutti_reader:reader@mongodb-tuttifrutti.alwaysdata.net/%s" % self.db_name)
+            "mongodb://localhost:27019/%s" % self.db_name)
         self.db = self.pongo[self.db_name]
         self.coll_products = self.db["Prosim"]
-        nb_products_in_db = self.coll_products.find().count()
-        # if self.verbose:
-        #     pprint("%d products are referenced" % (nb_products_in_db))
+        nb_products_in_db = self.coll_products.estimated_document_count()
+
+        if self.verbose:
+            pprint("%d products are referenced" % (nb_products_in_db))
 
         return nb_products_in_db
 
@@ -114,13 +119,13 @@ class Querier:
         fields_projection["similarity"] = 1
         fields_projection["score"] = 1
 
-        products_json = self.coll_products.find({
+        products_json = list(self.coll_products.find({
             prop: val
-        }, fields_projection)
+        }, fields_projection))
 
-        print "nb of products found = %s" % (products_json.count())
-        if products_json.count() > 0:
-            return products_json
+        print("nb of products found = %s" % (len(products_json)))
+        if len(products_json) > 0:
+            return list(products_json)
         else:
             return {}
 
@@ -149,21 +154,21 @@ class Querier:
         # fields_projection["similarity"] = 0
 
         if store != '' and country != '':
-            products_json = self.coll_products.find({
+            products_json = list(self.coll_products.find({
                 "code": {"$in": codes_matching},
                 "countries_tags": country,
                 "stores_tags": store
-            }, fields_projection)
+            }, fields_projection))
         elif country != '':
-            products_json = self.coll_products.find({
+            products_json = list(self.coll_products.find({
                 "code": {"$in": codes_matching},
                 "countries_tags": country
-            }, fields_projection)
+            }, fields_projection))
         else:
-            products_json = self.coll_products.find({
-                "code": {"$in": codes_matching}}, fields_projection)
+            products_json = list(self.coll_products.find({
+                "code": {"$in": codes_matching}}, fields_projection))
 
-        print "nb of products found = %s" % (products_json.count())
+        print("nb of products found = %s" % (len(products_json)))
         prod_ref_grade = prod_ref.score
 
         # Prepare limiting number of items retrieved for performance-prupose
@@ -172,7 +177,7 @@ class Querier:
         for c in range(self.db_min_value, self.db_max_value+1):
             products_counter[str(c)] = 0
 
-        if products_json.count() > 0:
+        if len(products_json) > 0:
             for product_json in products_json:
                 product = Product.Product(product_json)
                 product.score_proximity = int(stats_codes[product_json["code"]][0]);
@@ -265,7 +270,7 @@ class Querier:
             products_json = self.coll_products.find({
                 "code": {"$in": codes_matching}}, fields_projection)
 
-        print "nb of products found = %s" % (products_json.count())
+        print("nb of products found = %s" % (products_json.count()))
         if products_json.count() > 0:
             for product_json in products_json:
                 products_fetched.append(product_json)

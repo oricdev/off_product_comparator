@@ -6,6 +6,7 @@
  * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
 """
 # coding=utf-8
+from __future__ import absolute_import
 import os
 import time
 import json
@@ -57,7 +58,7 @@ def PG_fetch_product(code, country, store, score):
     if type(products) is dict:
         if len(products) == 0:
             return {}
-    elif products.count() == 0:
+    elif len(products) == 0:
             return {}
 
     myProduct = Product.Product(products[0])
