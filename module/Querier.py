@@ -13,6 +13,7 @@ from pymongo import MongoClient
 from module import Product, DataEnv
 from pprint import pprint
 import json
+import os
 from six.moves import range
 
 
@@ -74,11 +75,13 @@ class Querier:
         Connection to the NEW OFF-Product database
         :return:
         """
-        # todo: review since hard-coded!
-        # pprint("connecting to OFF MATCH database")
+        mongo_host = os.getenv("MONGO_HOST", "localhost")  # Valeur par défaut : localhost
+        mongo_port = os.getenv("MONGO_PORT", 27019)  # Valeur par défaut : 27017
+        pprint(f"connecting to OFF MATCH database <{mongo_host}:{mongo_port}>/{self.db_name}")
+
         self.pongo = MongoClient(
-        #    "mongodb://tuttifrutti_reader:reader@mongodb-tuttifrutti.alwaysdata.net/%s" % self.db_name)
-            "mongodb://localhost:27019/%s" % self.db_name)
+            #    "mongodb://tuttifrutti_reader:reader@mongodb-tuttifrutti.alwaysdata.net/%s" % self.db_name)
+            f"mongodb://{mongo_host}:{mongo_port}/%s" % self.db_name)
         self.db = self.pongo[self.db_name]
         self.coll_products = self.db["Prosim"]
         nb_products_in_db = self.coll_products.estimated_document_count()
@@ -174,7 +177,7 @@ class Querier:
         # Prepare limiting number of items retrieved for performance-prupose
         # products_counter = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
         products_counter = {}
-        for c in range(self.db_min_value, self.db_max_value+1):
+        for c in range(self.db_min_value, self.db_max_value + 1):
             products_counter[str(c)] = 0
 
         if len(products_json) > 0:
@@ -196,7 +199,8 @@ class Querier:
                             products_fetched.append(product)
                             products_counter[str(product.score)] = products_counter[str(product.score)] + 1
 
-                    elif product.score_proximity < 75 or ((product.score == prod_ref_grade and prod_ref_grade != self.db_max_value) or (
+                    elif product.score_proximity < 75 or (
+                            (product.score == prod_ref_grade and prod_ref_grade != self.db_max_value) or (
                             product.score < prod_ref_grade)):
                         if products_counter[str(product.score)] < 50:
                             products_fetched.append(product)
@@ -216,7 +220,8 @@ class Querier:
                             products_fetched.append(product)
                             products_counter[str(product.score)] = products_counter[str(product.score)] + 1
 
-                    elif product.score_proximity < 75 or ((product.score == prod_ref_grade and prod_ref_grade != self.db_min_value) or (
+                    elif product.score_proximity < 75 or (
+                            (product.score == prod_ref_grade and prod_ref_grade != self.db_min_value) or (
                             product.score > prod_ref_grade)):
                         if products_counter[str(product.score)] < 50:
                             products_fetched.append(product)

@@ -1,6 +1,6 @@
 [
   {
-    "isActive": true,
+    "isActive": false,
     "keepPrivate": false,
     "dbNickname": "nutriscore",
     "dbDisplayName": "Nutriscore",
@@ -84,7 +84,7 @@
     "nbIntersections": 366255109
   },
   {
-    "isActive": true,
+    "isActive": false,
     "keepPrivate": false,
     "isInError": false,
     "dbNickname": "novascore",
@@ -129,7 +129,7 @@
     "isInError": true,
     "errorMessage": "java.lang.Integer cannot be cast to java.lang.Double",
     "dbNickname": "novascore_next",
-    "dbDisplayName": "Nova Classification (Exp.) [next]",
+    "dbDisplayName": "Nova Classification",
     "dbName": "tuttifrutti_novascore_next",
     "dbSummary": "worldwide products based on their Nova classification",
     "dbDescriptionEn": "Database aimed at classifying OpenFoodFacts products based on their similarity to each other along with their classification Nova",
