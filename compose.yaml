@@ -1,0 +1,17 @@
+services:
+  web:
+    image: sha256:ebbe76effafe5eff541e23ca7b6289585cd848271c013729b78e1f27e01d554f
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - MONGO_HOST=mongo_tuttifrutti
+      - MONGO_PORT=27017
+    restart: unless-stopped
+    networks:
+      - tuttifrutti_network
+networks:
+  tuttifrutti_network:
+    external: true
