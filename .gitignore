@@ -7,4 +7,5 @@
 
 venv_2to3/
 module/
+_pycache__/
 

@@ -5,6 +5,12 @@
  * License: GNU Affero General Public License v3.0
  * License url: https://github.com/oricdev/off_product_comparator/blob/master/LICENSE
  */
+
+function clear_graph() {
+    d3.select("#svg_graph").selectAll("circle").remove();
+    d3.select("#svg_graph").selectAll("ellipse").remove();
+}
+
  /* draw SVG graph:
  - id_attach_graph: id of html-item for attaching the graph itself
  - db_graph is same as current_db_for_graph, but packed here together with function

@@ -45,46 +45,6 @@ function init() {
 
 }
 
-function guess_country_from_nav_lang() {
-    is_found = false;
-    data_countries = getCachedCountries();
-    // set country: 1) from url param if set; 2) from navigator
-    url_country = getParameterByName(URL_PARAM_COUNTRY, window.location.href);
-    if (url_country != undefined && url_country != "") {
-        nav_country = url_country;
-        // filter countries and fetch the one holding the country code of the navigator
-        user_country = data_countries.filter(
-            function (ctry) {
-                return ctry[COUNTRY_PROPERTY_EN_LABEL].toLowerCase() == nav_country.toLowerCase();
-            }
-        );
-    } else {
-        nav_country = ( (nav_language.indexOf('-') >= 0) ? nav_language.split('-')[1] : nav_language).toUpperCase();
-        // filter countries and fetch the one holding the country code of the navigator
-        user_country = data_countries.filter(
-            function (ctry) {
-                return ctry[COUNTRY_PROPERTY_EN_CODE] == nav_country;
-            }
-        );
-    }
-
-    if (user_country != undefined) {
-        for (var index_option in $(ID_INPUT_COUNTRY)[0]) {
-            current_option = $(ID_INPUT_COUNTRY)[0][index_option];
-            if (current_option.value === user_country[0][COUNTRY_PROPERTY_EN_LABEL]) {
-                is_found = true;
-                current_option.selected = true;
-                break;
-            }
-        }
-        if (is_found) {
-            // Load stores for guessed country
-            fetch_stores($(ID_INPUT_COUNTRY)[0][index_option]);
-            // fetch_stores("en:luxembourg");
-        }
-    }
-}
-
 function fillHtmlElementWithCountries(data_countries) {
     if (data_countries != null) {
         var options = data_countries.map(function (country) {
@@ -95,20 +55,6 @@ function fillHtmlElementWithCountries(data_countries) {
         $(ID_INPUT_COUNTRY).append(options);
 
         guess_country_from_nav_lang();
-    }
-}
-
-function fillHtmlElementWithStores(stores_by_country) {
-    if (stores_by_country != null) {
-        var options = stores_by_country.map(function (store) {
-            return $("<option></option>").val(store[STORE_ID_PROPERTY]).text(store[STORE_NAME_PROPERTY]);
-        });
-        $(ID_INPUT_STORE).empty();
-        $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
-        $(ID_INPUT_STORE).append(options);
-    } else {
-        $(ID_INPUT_STORE).empty();
-        $(ID_INPUT_STORE).append($("<option></option>").val('').text(''));
     }
 }
 
@@ -139,8 +85,9 @@ function go_fetch() {
         contentType: "application/json; charset=utf-8",
         data: {barcode: $(ID_INPUT_PRODUCT_CODE).val(),
             country: $(ID_INPUT_COUNTRY+" option:selected")[0].value,
-            store: $(ID_INPUT_STORE+" option:selected")[0].value,
-            score: $(ID_INPUT_SCORE_DB+" option:selected")[0].value},
+            store: '',
+            score: 'tuttifrutti_'+$(ID_INPUT_SCORE_DB+" option:selected")[0].value+'_'+$(ID_INPUT_COUNTRY+" option:selected")[0].value
+        },
         success: function (data) {
             unblock_screen();
             try {
@@ -152,6 +99,12 @@ function go_fetch() {
                 // possibly no data retrieved (product may have been excluded from search due to a lack of information (nutriments, etc.)
                 $(ID_WARNING).empty();
                 $(ID_WARNING).append(MSG_NO_DATA_RETRIEVED);
+                clear_graph();
+                cleanup_suggestions();
+                // Default image for product reference
+                $(ID_PRODUCT_IMG).attr("src", 'https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png');
+                //$(ID_PRODUCT_IMG).attr("height", "" + ($(window).innerHeight() / 7) + "px");
+                //$(ID_PRODUCT_IMG).attr("class", style_for_border_colour);
             }
         }
     });
