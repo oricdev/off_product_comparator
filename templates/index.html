@@ -85,17 +85,7 @@
                                             <!-- List of navigator's languages: see
                                             https://stackoverflow.com/questions/5580876/navigator-language-list-of-all-languages
                                             -->
-                                            <select id="input_country"
-                                                    onchange="set_user_country($(ID_INPUT_COUNTRY+' option:selected')[0]);
-                                                    fetch_stores($(ID_INPUT_COUNTRY+' option:selected')[0])">
-                                                <option></option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Store</td>
-                                        <td>
-                                            <select id="input_store" title="select a store">
+                                            <select id="input_country">
                                                 <option></option>
                                             </select>
                                         </td>
@@ -233,10 +223,10 @@
         <footer id="sb_bottom">
             <table id="sb_bottom_table">
                 <tr>
-                    <td><a href="https://twitter.com/GraphProsim" target="_blank"
+                    <td><a href="https://bsky.app/profile/offgraph.bsky.social" target="_blank"
                            title="twitter off graph &amp; prosim backend-engine">
-                        <img src="{{ url_for('static',filename='images/ico_twitter_1.png') }}"
-                             class="sb_ico_middle"
+                        <img src="{{ url_for('static',filename='images/ico_bsky_1.png') }}"
+                             class="sb_ico_middle" style="border-radius: 5px"
                              title="twitter off graph &amp; prosim backend-engine"/></a></td>
                     <td><a href="https://offgraphs.blogspot.com" target="_blank"
                            title="access to dedicated blog on blogger">

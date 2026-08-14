@@ -1,10 +1,15 @@
 /**
  * Created by Olivier Richard (oric.dev@iznogoud.neomailbox.ch) on 18/03/18.
  */
+var DATA_COUNTRIES={
+  "fr": "France",
+  "de":"Germany",
+  "us": "United States"
+}
 // Minimum proximity of matching products with reference-product for being part of suggestions
 var MAX_STORES_TO_SHOW_PER_COUNTRY = 100;
 var MIN_SCORE_FOR_SUGGESTIONS = 70;
-var MAX_SUGGESTIONS = 50;
+var MAX_SUGGESTIONS = 10;
 // IMPORTANT: strings received from server telling the matching process is ended or there is a warning and cannot run.
 // Is Used to clear setInterval Ajax requests!
 var MSG_START_OF_LOG_WARNING = "WARNING";

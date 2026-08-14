@@ -8,10 +8,12 @@
 
 /* COUNTRIES */
 function fetch_countries() {
-    var cached_countries = getCachedCountries();
-    if (cached_countries != null) {
-        fillHtmlElementWithCountries(cached_countries);
-    }
+        var options = Object.keys(DATA_COUNTRIES).map(function (code) {
+            return $("<option></option>").val(code).text(DATA_COUNTRIES[code]);
+        });
+        $(ID_INPUT_COUNTRY).empty();
+        $(ID_INPUT_COUNTRY).append(options);
+
 }
 
 function getCachedCountries() {

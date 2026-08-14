@@ -43,12 +43,6 @@ app.secret_key = os.urandom(24)
 # app.secret_key = "toto cutugno"
 app.config['SESSION_TYPE'] = 'filesystem'
 
-# load countries
-file_countries = "./static/data/countries.json"
-with open(file_countries, "r") as fileHandler:
-    data_countries = json.load(fileHandler)
-
-
 @app.route("/")
 def start():
     pprint("INCOMING (/) %s [%s]" % (request.remote_addr, datetime.datetime.now()))
@@ -180,28 +174,6 @@ def fetchPGraph():
     # Puis sérialiser
     return json.dumps(ret_data)
     #return jsonify(ret_data)
-
-
-@app.route('/fetchStores/', methods=['GET'])
-def fetch_stores():
-    stores = None
-    # pprint ("request is:%r" % request)
-    country = request.args.get('country')
-    pprint("INCOMING (//fetchStores//country=%s) %s [%s]" % (country, request.remote_addr, datetime.datetime.now()))
-    # check country is registered (e.g.: "en:france")
-    if country in data_countries:
-        # check if local file exists
-        file_stores = "./static/data/stores/stores_%s.json" % country[3:]
-        if not os.path.exists(file_stores):
-            # file does not exist locally => download it
-            url_list_stores_for_country = "https://world.openfoodfacts.org/country/%s/stores.json" % country[3:]
-            six.moves.urllib.request.urlretrieve(url_list_stores_for_country, file_stores)
-
-        with open(file_stores, "r") as fileHandler:
-            stores = json.load(fileHandler)
-
-    return jsonify(stores)
-
 
 @app.route('/fetchScoreDbs', methods=['GET'])
 def fetch_score_dbs():

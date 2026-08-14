@@ -121,7 +121,7 @@ class Graph:
                     if u'brands_tags' in product.dic_props:
                         brands = product.dic_props['brands_tags']
                     else:
-                        brands = '??'
+                        brands = 'NO_BRAND'
                     mini_prod = {"code": product.dic_props["code"],
                                  "name": name,
                                  "brands_tags": brands,
@@ -237,7 +237,10 @@ class Graph:
                 #     print "stop"
                 url_prod = "https://world.openfoodfacts.org/product/%s" % mini_prod["code"]
                 url_prod = url_prod.encode('utf-8')
-                url_img = mini_prod["images"]
+                if "images" in mini_prod:
+                    url_img = mini_prod["images"]
+                else:
+                    url_img = None
                 categs = self.get_categories_html(self.data_set_ref[0]["categories_tags"], mini_prod["categories_tags"])
                 # score_proximity = str(int(mini_prod["score_proximity"]*100))
 
@@ -310,7 +313,7 @@ class Graph:
             else:
                 name = product_name
         elif len(generic_name) == 0 and len(product_name) == 0:
-            name = '??'
+            name = 'NO_NAME'
         elif len(product_name) == 0:
             name = generic_name
         else:

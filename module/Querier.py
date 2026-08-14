@@ -44,25 +44,8 @@ class Querier:
         self.db_bottom_up = True
         self.db_min_value = 1
         self.db_max_value = 5
-        # Determine databse to use for the request
-        file_dbs = "./static/data/db_stats.json"
-        with open(file_dbs, "r") as fileHandler:
-            score_dbs = json.load(fileHandler)
-
-        self.db_name = None
-        try:
-            for db in score_dbs:
-                if self.db_name is None:
-                    if db["dbNickname"] == scoreDb:
-                        self.db_name = db[u"dbName"]
-                        self.db_object = db
-                        self.db_bottom_up = db[u"bottomUp"]
-                        self.db_min_value = db[u"scoreMinValue"]
-                        self.db_max_value = db[u"scoreMaxValue"]
-
-        except Exception:
-            self.db_name = "tuttifrutti_nutriscore"
-            self.db_object = None
+        self.db_name = scoreDb
+        self.db_object = None
 
         print("Database being used is: %r" % self.db_name)
 
@@ -156,20 +139,8 @@ class Querier:
         # do not retrieve similarity, not necessary for matching products
         # fields_projection["similarity"] = 0
 
-        if store != '' and country != '':
-            products_json = list(self.coll_products.find({
-                "code": {"$in": codes_matching},
-                "countries_tags": country,
-                "stores_tags": store
-            }, fields_projection))
-        elif country != '':
-            products_json = list(self.coll_products.find({
-                "code": {"$in": codes_matching},
-                "countries_tags": country
-            }, fields_projection))
-        else:
-            products_json = list(self.coll_products.find({
-                "code": {"$in": codes_matching}}, fields_projection))
+        products_json = list(self.coll_products.find({
+            "code": {"$in": codes_matching}}, fields_projection))
 
         print("nb of products found = %s" % (len(products_json)))
         prod_ref_grade = prod_ref.score
